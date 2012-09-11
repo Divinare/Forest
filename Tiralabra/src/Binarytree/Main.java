@@ -18,6 +18,8 @@ public class Main {
         binarytree.printInOrder(binarytree.getRoot());
         System.out.println("pre-order läpikäynti:");
         binarytree.printPreOrder(binarytree.getRoot());
+        System.out.println("level-order läpikäynti:");
+        binarytree.printLevelOrder();
         System.out.println("max on " + binarytree.max(binarytree.getRoot()));
         System.out.println("min on " + binarytree.min(binarytree.getRoot()));
         System.out.println("etsitään avain 7 : " + binarytree.search(binarytree.getRoot(), 7).key);

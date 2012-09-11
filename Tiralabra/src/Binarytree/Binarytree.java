@@ -1,5 +1,7 @@
 package Binarytree;
 
+import DataStructures.LinkedList;
+
 public class Binarytree {
 
     private Node root;
@@ -8,17 +10,6 @@ public class Binarytree {
         this.root = new Node(key);
     }
 
-//    public void lol() {
-//        Node x = new Node(5);
-//        Node y = new Node(7);
-//        Node z = new Node(10);
-//        Node m = new Node(2);
-//        root.left = x;
-//        root.left.right = y;
-//        root.left.left = m;
-//        root.left.left.left = z;
-//    }
-    
     public void insert(int key) {
         Node uusi = new Node(key);
         if (root == null) {
@@ -85,6 +76,29 @@ public class Binarytree {
             printPreOrder(x.left);
             printPreOrder(x.right);
 
+        }
+    }
+
+    public void printLevelOrder() {
+//        if (this.root == null) {
+//            return;
+//        }
+        Binarytree binarytree = this;
+        LinkedList list = new LinkedList(binarytree.getRoot().key);
+        while (list.getSize() != 0) {
+            System.out.println(list.getSize());
+            System.out.println(list.getHead());
+            // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+            }
+            // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            }
+            list.removeHead();
+            System.out.println("koko " + list.getSize());
+            System.out.println("hahaha " + list.getHead());
         }
     }
 
