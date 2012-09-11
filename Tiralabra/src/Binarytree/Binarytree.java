@@ -18,6 +18,7 @@ public class Binarytree {
 //        root.left.left = m;
 //        root.left.left.left = z;
 //    }
+    
     public void insert(int key) {
         Node uusi = new Node(key);
         if (root == null) {

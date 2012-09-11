@@ -16,9 +16,9 @@ public class AVLtree {
         }
         Node x = root;
         Node p = x;
-        //    int height = 0;
+//    int height = 0;
         while (x != null) {
-            //         height++;
+//         height++;
             p = x;
             if (key < x.key) {
                 x = x.left;
@@ -34,7 +34,7 @@ public class AVLtree {
         } else {
             p.right = uusi;
         }
-
+// check if balanced
     }
 
     public int getHeight(Node x) {
@@ -54,8 +54,8 @@ public class AVLtree {
         if (k1.left != null) {
             k1.left.parent = k1;
         }
-        k1.height = max( getHeight(k1.left), getHeight(k1.right)) +1;
-        k2.height = max( getHeight(k2.left), getHeight(k2.right)) +1;
+        k1.height = Math.max( getHeight(k1.left), getHeight(k1.right)) +1;
+        k2.height = Math.max( getHeight(k2.left), getHeight(k2.right)) +1;
         return k2;
     }
     
