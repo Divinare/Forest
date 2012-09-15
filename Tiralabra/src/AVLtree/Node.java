@@ -15,9 +15,6 @@ public class Node {
     public int getKey() {
         return key;
     }
-    public int getHeight() {
-        return height;
-    }
     public void setHeight(int height) {
         this.height = height;
     }

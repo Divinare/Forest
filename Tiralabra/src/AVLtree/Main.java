@@ -1,7 +1,7 @@
 package AVLtree;
 
-
 public class Main {
+
     public static void main(String[] args) {
         // AVL-puun testausta:
         AVLtree avltree = new AVLtree(5);
@@ -16,8 +16,10 @@ public class Main {
         avltree.printInOrder(avltree.getRoot());
         System.out.println("pre-order läpikäynti:");
         avltree.printPreOrder(avltree.getRoot());
+        System.out.println("level-order läpikäynti:");
+        avltree.printLevelOrder();
         System.out.println("max on " + avltree.max(avltree.getRoot()));
         System.out.println("min on " + avltree.min(avltree.getRoot()));
-        
+
     }
 }

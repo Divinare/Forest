@@ -1,5 +1,7 @@
 package AVLtree;
 
+import DataStructures.LinkedList;
+
 public class AVLtree {
 
     private Node root;
@@ -87,6 +89,15 @@ public class AVLtree {
             return search(x.right, key);
         }
     }
+    
+    public int laskeKorkeus(Node x) {
+        if (x == null) {
+            return -1;
+        }
+        int k1 = laskeKorkeus(x.left);
+        int k2 = laskeKorkeus(x.right);
+        return Math.max(k1, k2) + 1;
+    }
 
     public void printInOrder(Node x) {
         if (x != null) {
@@ -102,6 +113,25 @@ public class AVLtree {
             printPreOrder(x.left);
             printPreOrder(x.right);
 
+        }
+    }
+    
+        public void printLevelOrder() {
+        AVLtree binarytree = this;
+        LinkedList list = new LinkedList(binarytree.getRoot().key);
+        while (list.getSize() != 0) {
+            System.out.print(list.getHead());
+            System.out.print(" korkeus on " + laskeKorkeus(search(binarytree.getRoot(), list.getHead())) + " ");
+            System.out.println("");
+            // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+            }
+            // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            }
+            list.removeHead();
         }
     }
 

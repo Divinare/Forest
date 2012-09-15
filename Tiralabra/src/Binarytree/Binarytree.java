@@ -5,13 +5,15 @@ import DataStructures.LinkedList;
 public class Binarytree {
 
     private Node root;
+    private int vapaaLuku;
 
     public Binarytree(int key) {
-        this.root = new Node(key);
+        this.root = new Node(key, false);
+        this.vapaaLuku = 50;
     }
 
     public void insert(int key) {
-        Node uusi = new Node(key);
+        Node uusi = new Node(key, false);
         if (root == null) {
             root = uusi;
             return;
@@ -62,6 +64,15 @@ public class Binarytree {
         return x.key;
     }
 
+    public int laskeKorkeus(Node x) {
+        if (x == null) {
+            return -1;
+        }
+        int k1 = laskeKorkeus(x.left);
+        int k2 = laskeKorkeus(x.right);
+        return Math.max(k1, k2) + 1;
+    }
+
     public void printInOrder(Node x) {
         if (x != null) {
             printInOrder(x.left);
@@ -80,13 +91,9 @@ public class Binarytree {
     }
 
     public void printLevelOrder() {
-//        if (this.root == null) {
-//            return;
-//        }
         Binarytree binarytree = this;
         LinkedList list = new LinkedList(binarytree.getRoot().key);
         while (list.getSize() != 0) {
-            System.out.println(list.getSize());
             System.out.println(list.getHead());
             // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
             if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
@@ -97,9 +104,90 @@ public class Binarytree {
                 list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
             }
             list.removeHead();
-            System.out.println("koko " + list.getSize());
-            System.out.println("hahaha " + list.getHead());
         }
+    }
+
+    public void printTree() {
+        // tehdään "täydellinen" binääripuu
+        Binarytree binarytree = teePuustaTaydellinen(this, laskeKorkeus(this.getRoot()));
+
+
+        LinkedList list = new LinkedList(binarytree.getRoot().key);
+        while (list.getSize() != 0) {
+            System.out.println(list.getHead());
+            // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
+            System.out.println("HEAD ON " + list.getHead());
+            System.out.println("onko root null? " + binarytree.getRoot().key);
+            System.out.println("kokeillaan etsiä: " + binarytree.search(binarytree.getRoot(), list.getHead()).left);
+            if (list.getHeadNode() != null) {
+                if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
+                    list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+                }
+            }
+            // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            }
+            list.removeHead();
+        }
+    }
+
+    private Binarytree teePuustaTaydellinen(Binarytree tree, int korkeus) {
+        int tamanHetkinenKorkeus = korkeus;
+        int solmujenMaara = 1;
+        int korkeudenLaskemisraja = 1;
+        LinkedList list = new LinkedList(tree.getRoot().key);
+        System.out.println("lololol " + tree.getRoot().key);
+        while (list.getSize() != 0 && tamanHetkinenKorkeus >= 0) {
+            // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
+            if (tree.search(tree.getRoot(), list.getHead()).left != null) {
+                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).left.key);
+                list.add(tree.search(tree.getRoot(), list.getHead()).left.key);
+                solmujenMaara++;
+            }
+            // Laitetaan feikkilapsi jos lasta ei ole
+            if (tree.search(tree.getRoot(), list.getHead()).left == null) {
+                tree.search(tree.getRoot(), list.getHead()).left = new Node(etsiVapaaLuku(tree.getRoot()), true);
+                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).left.key);
+                list.add(tree.search(tree.getRoot(), list.getHead()).left.key);
+                solmujenMaara++;
+            }
+            // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
+            if (tree.search(tree.getRoot(), list.getHead()).right != null) {
+                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).right.key);
+                list.add(tree.search(tree.getRoot(), list.getHead()).right.key);
+                solmujenMaara++;
+            }
+            // Laitetaan feikkilapsi jos lasta ei ole
+            if (tree.search(tree.getRoot(), list.getHead()).right == null) {
+                tree.search(tree.getRoot(), list.getHead()).right = new Node(etsiVapaaLuku(tree.getRoot()), true);
+                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).right.key);
+                list.add(tree.search(tree.getRoot(), list.getHead()).right.key);
+                solmujenMaara++;
+            }
+            list.removeHead();
+            if (korkeudenLaskemisraja <= solmujenMaara) {
+                korkeudenLaskemisraja = korkeudenLaskemisraja * 2 + 1;
+                tamanHetkinenKorkeus--;
+            }
+        }
+
+        return tree;
+    }
+
+    public int etsiVapaaLuku(Node x) {
+//        int vapaaLuku = 0;
+//        boolean loytyi = false;
+//        while (loytyi == false) {
+//            if (search(x, vapaaLuku) == null) {
+//                loytyi = true;
+//            } else {
+//                vapaaLuku++;
+//            }
+//        }
+//        return vapaaLuku;
+        vapaaLuku++;
+        return vapaaLuku;
     }
 
     public Node getRoot() {

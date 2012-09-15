@@ -9,7 +9,7 @@ public class Main {
 //        binarytree.lol();
         binarytree.insert(8);
         binarytree.insert(7);
-        binarytree.insert(10);
+//        binarytree.insert(10);
         binarytree.insert(2);
         binarytree.insert(4);
         binarytree.insert(1);
@@ -23,6 +23,8 @@ public class Main {
         System.out.println("max on " + binarytree.max(binarytree.getRoot()));
         System.out.println("min on " + binarytree.min(binarytree.getRoot()));
         System.out.println("etsitään avain 7 : " + binarytree.search(binarytree.getRoot(), 7).key);
+        System.out.println("Puu tulostettuna: ");
+        binarytree.printTree();
         
     }
 }
