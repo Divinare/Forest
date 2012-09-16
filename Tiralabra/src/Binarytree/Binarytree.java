@@ -110,7 +110,7 @@ public class Binarytree {
     public void printTree() {
         // tehdään "täydellinen" binääripuu
         Binarytree binarytree = teePuustaTaydellinen(this, laskeKorkeus(this.getRoot()));
-
+        System.out.println("kokeillaa " + binarytree.search(binarytree.getRoot(), 52).key);
 
         LinkedList list = new LinkedList(binarytree.getRoot().key);
         while (list.getSize() != 0) {
@@ -119,10 +119,8 @@ public class Binarytree {
             System.out.println("HEAD ON " + list.getHead());
             System.out.println("onko root null? " + binarytree.getRoot().key);
             System.out.println("kokeillaan etsiä: " + binarytree.search(binarytree.getRoot(), list.getHead()).left);
-            if (list.getHeadNode() != null) {
-                if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
-                    list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
-                }
+            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
             }
             // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
             if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {

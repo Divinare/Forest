@@ -1,8 +1,7 @@
 package Binarytree;
 
-
 public class Main {
-    
+
     public static void main(String[] args) {
         // Binääripuun testausta:
         Binarytree binarytree = new Binarytree(5);
@@ -24,7 +23,7 @@ public class Main {
         System.out.println("min on " + binarytree.min(binarytree.getRoot()));
         System.out.println("etsitään avain 7 : " + binarytree.search(binarytree.getRoot(), 7).key);
         System.out.println("Puu tulostettuna: ");
-        binarytree.printTree();
-        
+//        binarytree.printTree();
+
     }
 }
