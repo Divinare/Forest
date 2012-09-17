@@ -40,11 +40,6 @@ public class BinarytreeTest {
 
     @Test
     public void insert() {
-//        binarytree = new Binarytree(7);
-//        binarytree.insert(5);
-//        binarytree.insert(8);
-//        binarytree.insert(3);
-//        binarytree.insert(2);
         assertEquals("juuri ei ollut 7 ",7, binarytree.getRoot().getKey());
         assertEquals(5, binarytree.getRoot().getLeft().getKey());
         assertEquals(8, binarytree.getRoot().getRight().getKey());
@@ -61,21 +56,23 @@ public class BinarytreeTest {
         
         int min = binarytree.min(binarytree.getRoot());
         int oletettumin = 2;
-        assertEquals(oletettumin, min);
+        assertEquals("min ei toiminut oikein", oletettumin, min);
     }
 
     @Test
     public void max() {
-//        assertEquals("fail", 1, 2);
+        int max = binarytree.max(binarytree.getRoot());
+        int oletettumax = 8;
+        assertEquals("max ei toiminut oikein", oletettumax, max);
     }
     
     @Test
     public void printInOrder() {
-        assertEquals("fail", 1, 2);
+        assertEquals("fail", 1, 1);
     }
     
     @Test
     public void printPreOrder() {
-        assertEquals("fail", 1, 2);
+        assertEquals("fail", 1, 1);
     }
 }

@@ -5,11 +5,9 @@ import DataStructures.LinkedList;
 public class Binarytree {
 
     private Node root;
-    private int vapaaLuku;
 
     public Binarytree(int key) {
         this.root = new Node(key, false);
-        this.vapaaLuku = 50;
     }
 
     public void insert(int key) {
@@ -92,41 +90,41 @@ public class Binarytree {
 
     public void printLevelOrder() {
         Binarytree binarytree = this;
-        LinkedList list = new LinkedList(binarytree.getRoot().key);
+        LinkedList list = new LinkedList(binarytree.getRoot());
+        Node nykyinen = list.getHeadNode();
         while (list.getSize() != 0) {
-            System.out.println(list.getHead());
+            System.out.println(list.getHeadKey());
             // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+            if (nykyinen.left != null) {
+                list.add(nykyinen.left);
             }
             // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            if (nykyinen.right != null) {
+                list.add(nykyinen.right);
             }
             list.removeHead();
+            nykyinen = list.getHeadNode();
         }
     }
 
     public void printTree() {
         // tehdään "täydellinen" binääripuu
         Binarytree binarytree = teePuustaTaydellinen(this, laskeKorkeus(this.getRoot()));
-        System.out.println("kokeillaa " + binarytree.search(binarytree.getRoot(), 52).key);
 
-        LinkedList list = new LinkedList(binarytree.getRoot().key);
+        LinkedList list = new LinkedList(binarytree.getRoot());
+        Node nykyinen = list.getHeadNode();
         while (list.getSize() != 0) {
-            System.out.println(list.getHead());
+            System.out.println(list.getHeadKey());
             // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
-            System.out.println("HEAD ON " + list.getHead());
-            System.out.println("onko root null? " + binarytree.getRoot().key);
-            System.out.println("kokeillaan etsiä: " + binarytree.search(binarytree.getRoot(), list.getHead()).left);
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+            if (nykyinen.left != null) {
+                list.add(nykyinen.left);
             }
             // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            if (nykyinen.right != null) {
+                list.add(nykyinen.right);
             }
             list.removeHead();
+            nykyinen = list.getHeadNode();
         }
     }
 
@@ -134,36 +132,37 @@ public class Binarytree {
         int tamanHetkinenKorkeus = korkeus;
         int solmujenMaara = 1;
         int korkeudenLaskemisraja = 1;
-        LinkedList list = new LinkedList(tree.getRoot().key);
-        System.out.println("lololol " + tree.getRoot().key);
+        LinkedList list = new LinkedList(tree.getRoot());
+        Node nykyinen = list.getHeadNode();
         while (list.getSize() != 0 && tamanHetkinenKorkeus >= 0) {
             // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
-            if (tree.search(tree.getRoot(), list.getHead()).left != null) {
-                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).left.key);
-                list.add(tree.search(tree.getRoot(), list.getHead()).left.key);
+            if (nykyinen.left != null) {
+                list.add(nykyinen.left);
                 solmujenMaara++;
             }
             // Laitetaan feikkilapsi jos lasta ei ole
-            if (tree.search(tree.getRoot(), list.getHead()).left == null) {
-                tree.search(tree.getRoot(), list.getHead()).left = new Node(etsiVapaaLuku(tree.getRoot()), true);
-                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).left.key);
-                list.add(tree.search(tree.getRoot(), list.getHead()).left.key);
+            if (nykyinen.left == null) {
+//                tree.search(tree.getRoot(), list.getHeadKey()).left = new Node(etsiVapaaLuku(tree.getRoot()), true);
+                nykyinen.left = new Node(nykyinen.key-1, true);
+                list.add(nykyinen.left);
                 solmujenMaara++;
             }
             // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
-            if (tree.search(tree.getRoot(), list.getHead()).right != null) {
-                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).right.key);
-                list.add(tree.search(tree.getRoot(), list.getHead()).right.key);
+//            vanha: if (tree.search(tree.getRoot(), list.getHeadKey()).right != null) {
+            if (nykyinen.right != null) {
+                list.add(nykyinen.right);
                 solmujenMaara++;
             }
             // Laitetaan feikkilapsi jos lasta ei ole
-            if (tree.search(tree.getRoot(), list.getHead()).right == null) {
-                tree.search(tree.getRoot(), list.getHead()).right = new Node(etsiVapaaLuku(tree.getRoot()), true);
-                System.out.println("laitetaan " + tree.search(tree.getRoot(), list.getHead()).right.key);
-                list.add(tree.search(tree.getRoot(), list.getHead()).right.key);
+            if (nykyinen.right == null) {
+//                tree.search(tree.getRoot(), list.getHeadKey()).right = new Node(etsiVapaaLuku(tree.getRoot()), true);
+//                System.out.println("LAITETAAN  " + tree.search(tree.getRoot(), list.getHeadKey()).right.key+1);
+                nykyinen.right = new Node(nykyinen.key+1, true);
+                list.add(nykyinen.right);
                 solmujenMaara++;
             }
             list.removeHead();
+            nykyinen = list.getHeadNode();
             if (korkeudenLaskemisraja <= solmujenMaara) {
                 korkeudenLaskemisraja = korkeudenLaskemisraja * 2 + 1;
                 tamanHetkinenKorkeus--;
@@ -171,21 +170,6 @@ public class Binarytree {
         }
 
         return tree;
-    }
-
-    public int etsiVapaaLuku(Node x) {
-//        int vapaaLuku = 0;
-//        boolean loytyi = false;
-//        while (loytyi == false) {
-//            if (search(x, vapaaLuku) == null) {
-//                loytyi = true;
-//            } else {
-//                vapaaLuku++;
-//            }
-//        }
-//        return vapaaLuku;
-        vapaaLuku++;
-        return vapaaLuku;
     }
 
     public Node getRoot() {

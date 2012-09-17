@@ -12,6 +12,7 @@ public class Main {
         binarytree.insert(2);
         binarytree.insert(4);
         binarytree.insert(1);
+        binarytree.insert(1);
         binarytree.insert(3);
         System.out.println("in-order läpikäynti:");
         binarytree.printInOrder(binarytree.getRoot());
@@ -23,7 +24,7 @@ public class Main {
         System.out.println("min on " + binarytree.min(binarytree.getRoot()));
         System.out.println("etsitään avain 7 : " + binarytree.search(binarytree.getRoot(), 7).key);
         System.out.println("Puu tulostettuna: ");
-//        binarytree.printTree();
+        binarytree.printTree();
 
     }
 }

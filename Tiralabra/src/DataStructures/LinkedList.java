@@ -1,20 +1,22 @@
 package DataStructures;
 
+import Binarytree.Node;
+
 public class LinkedList {
 
     private Node head;
     private Node tail;
     private int length; // emt tarviiks tätä
 
-    public LinkedList(int head) {
-        Node uusi = new Node(head);
+    public LinkedList(Node uusi) {
+//        Node uusi = new Node(key, false);
         this.head = uusi;
         this.tail = uusi;
         this.length = 1;
     }
 
-    public void add(int key) {
-        Node uusi = new Node(key);
+    public void add(Node uusi) {
+//        Node uusi = new Node(key, false);
         if (getSize() == 1) {
             head.next = tail;
         }
@@ -28,8 +30,8 @@ public class LinkedList {
         this.length--;
     }
 
-    public int getHead() {
-        return head.getKey();
+    public int getHeadKey() {
+        return head.key;
     }
 
     public Node getHeadNode() {
@@ -38,19 +40,5 @@ public class LinkedList {
 
     public int getSize() {
         return length;
-    }
-
-    private class Node {
-
-        private Node next;
-        private int key; // käykö key, vai pitääkö käyttää Object_data?
-
-        public Node(int key) {
-            this.key = key;
-        }
-
-        public int getKey() {
-            return key;
-        }
     }
 }

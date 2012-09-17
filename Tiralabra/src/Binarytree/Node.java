@@ -7,6 +7,7 @@ public class Node {
     public Node left;
     public Node right;
     public Node parent;
+    public Node next;
     public Boolean onkoNull;
     
     public Node(int key, boolean onkoNull) {  

@@ -120,16 +120,16 @@ public class AVLtree {
         AVLtree binarytree = this;
         LinkedList list = new LinkedList(binarytree.getRoot().key);
         while (list.getSize() != 0) {
-            System.out.print(list.getHead());
-            System.out.print(" korkeus on " + laskeKorkeus(search(binarytree.getRoot(), list.getHead())) + " ");
+            System.out.print(list.getHeadKey());
+            System.out.print(" korkeus on " + laskeKorkeus(search(binarytree.getRoot(), list.getHeadKey())) + " ");
             System.out.println("");
             // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).left != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).left.key);
+            if (binarytree.search(binarytree.getRoot(), list.getHeadKey()).left != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHeadKey()).left.key);
             }
             // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
-            if (binarytree.search(binarytree.getRoot(), list.getHead()).right != null) {
-                list.add(binarytree.search(binarytree.getRoot(), list.getHead()).right.key);
+            if (binarytree.search(binarytree.getRoot(), list.getHeadKey()).right != null) {
+                list.add(binarytree.search(binarytree.getRoot(), list.getHeadKey()).right.key);
             }
             list.removeHead();
         }
