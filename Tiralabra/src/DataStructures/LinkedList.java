@@ -1,7 +1,5 @@
 package DataStructures;
 
-import Binarytree.Node;
-
 public class LinkedList {
 
     private Node head;
