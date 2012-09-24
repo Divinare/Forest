@@ -2,7 +2,7 @@ package Binarytree;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         // Binääripuun testausta:
         Binarytree binarytree = new Binarytree(5);
         binarytree.insert(8);
@@ -10,20 +10,19 @@ public class Main {
         binarytree.insert(10);
         binarytree.insert(2);
         binarytree.insert(14);
-//        binarytree.insert(1);
-//        binarytree.insert(18);
-//        binarytree.insert(17);
+        binarytree.insert(13);
+        binarytree.insert(18);
+        binarytree.insert(52);
 //        binarytree.insert(19);
 //        binarytree.insert(7);
 //        binarytree.insert(6);
-//        binarytree.insert(7);
+//        binarytree.insert(1);
 //        binarytree.insert(5);
 //        binarytree.insert(6);
 //        binarytree.insert(0);
 //        binarytree.insert(1);
 //        binarytree.insert(3);
 //        binarytree.insert(4);
-//        binarytree.insert(-1);
 
         System.out.println("in-order läpikäynti:");
         binarytree.printInOrder(binarytree.getRoot());

@@ -3,26 +3,31 @@ package Trietree;
 import java.util.ArrayList;
 
 public class Trietree {
-    
+
     private ArrayList<Node> juuri;
-    
+
     public Trietree() {
         this.juuri = new ArrayList();
     }
-    
+
     public void add(String sana) {
-        
+
         Node uusi = this.getChild(sana.charAt(0));
         String loput = sana.substring(1);
         if (uusi == null) {
+            uusi = new Node();
             uusi.setName(sana.charAt(0));
-            uusi.add(loput);
-        }
-        else {
-            uusi.add(loput);
+            juuri.add(uusi);
+            if (loput.length() > 0) {
+                uusi.add(loput);
+            }
+        } else {
+            if (loput.length() > 0) {
+                uusi.add(loput);
+            }
         }
     }
-    
+
     public boolean etsiSana(String sana) {
         Node current = null;
         for (int i = 0; i < juuri.size(); i++) {
@@ -33,7 +38,7 @@ public class Trietree {
         if (current == null) { // Jos sanan alkukirjainta ei edes löydy juuresta
             return false;
         }
-        for (int i = 0; i < sana.length(); i++) {
+        for (int i = 1; i < sana.length(); i++) {
             if (current.containsChild(sana.charAt(i))) {
                 current = current.getChild(sana.charAt(i));
             } else {
@@ -42,7 +47,7 @@ public class Trietree {
         }
         return true;
     }
-    
+
     public Node getChild(char c) {
         for (int i = 0; i < juuri.size(); i++) {
             if (juuri.get(i).getName() == c) {
@@ -51,5 +56,9 @@ public class Trietree {
         }
         Node tyhja = null;
         return tyhja; // :D
+    }
+    
+    public ArrayList<Node> getRoot() {
+        return this.juuri;
     }
 }

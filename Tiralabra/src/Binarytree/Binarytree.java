@@ -3,12 +3,16 @@ package Binarytree;
 import DataStructures.Node;
 import DataStructures.LinkedList;
 
-public class Binarytree {
+public class Binarytree implements Cloneable {
 
     private Node root;
 
     public Binarytree(int key) {
         this.root = new Node(key, false);
+    }
+
+    public Binarytree(Node root) {
+        this.root = root;
     }
 
     public void insert(int key) {
@@ -37,7 +41,7 @@ public class Binarytree {
         }
 
     }
-    
+
     public Node delete(Node poistettava) {
         // Poistettavalla ei ole lapsia:
         if (poistettava.left == null && poistettava.right == null) {
@@ -48,8 +52,7 @@ public class Binarytree {
             }
             if (poistettava == vanhempi.left) {
                 vanhempi.left = null;
-            }
-            else {
+            } else {
                 vanhempi.right = null;
             }
             return poistettava;
@@ -59,8 +62,7 @@ public class Binarytree {
             Node lapsi;
             if (poistettava.left != null) {
                 lapsi = poistettava.left;
-            }
-            else {
+            } else {
                 lapsi = poistettava.right;
             }
             Node vanhempi = poistettava.parent;
@@ -71,21 +73,19 @@ public class Binarytree {
             }
         }
         // Poistettavalla on kaksi lasta
-       Node seuraaja = min(poistettava.right);
-        System.out.println("seuraaja on " + seuraaja.key);
-       poistettava.key = seuraaja.key;
-       Node lapsi = seuraaja.right;
-       Node vanhempi = seuraaja.parent;
-       if (vanhempi.left == seuraaja) {
-           vanhempi.left = lapsi;
-       }
-       else {
-           vanhempi.right = lapsi;
-       }
-       if (lapsi != null){
-           lapsi.parent = vanhempi;
-       }
-       return seuraaja;
+        Node seuraaja = min(poistettava.right);
+        poistettava.key = seuraaja.key;
+        Node lapsi = seuraaja.right;
+        Node vanhempi = seuraaja.parent;
+        if (vanhempi.left == seuraaja) {
+            vanhempi.left = lapsi;
+        } else {
+            vanhempi.right = lapsi;
+        }
+        if (lapsi != null) {
+            lapsi.parent = vanhempi;
+        }
+        return seuraaja;
     }
 
     public Node search(Node x, int key) {
@@ -158,14 +158,15 @@ public class Binarytree {
         }
     }
 
-    public void printTree() {
+    public void printTree() throws CloneNotSupportedException {
         int korkeus = laskeKorkeus(this.getRoot());
         int tamanHetkinenKorkeus = korkeus;
         int solmujenMaara = 1;
         int korkeudenLaskemisraja = 1;
         boolean tulostetaankoEkatValit = true;
         // Tehdään puusta "täydellinen" puu
-        Binarytree binarytree = teePuustaTaydellinen(this, korkeus);
+        Binarytree copyTree = (Binarytree) this.clone();
+        Binarytree binarytree = teePuustaTaydellinen(copyTree, korkeus);
 
         LinkedList list = new LinkedList(binarytree.getRoot());
         Node nykyinen = list.getHeadNode();
@@ -271,5 +272,14 @@ public class Binarytree {
 
     public Node getRoot() {
         return root;
+    }
+
+    protected Object clone()
+            throws CloneNotSupportedException {
+        Node clone = (Node) this.getRoot().clone();
+        Binarytree cloneTree = new Binarytree(clone);
+
+        return cloneTree;
+
     }
 }

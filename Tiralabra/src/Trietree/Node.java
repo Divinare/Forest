@@ -1,4 +1,5 @@
 package Trietree;
+
 import java.util.ArrayList;
 
 public class Node {
@@ -23,10 +24,16 @@ public class Node {
         Node uusi = this.getChild(sana.charAt(0));
         String loput = sana.substring(1);
         if (uusi == null) {
+            uusi = new Node();
             uusi.setName(sana.charAt(0));
-            uusi.add(loput);
+            lapset.add(uusi);
+            if (loput.length() > 0) {
+                uusi.add(loput);
+            }
         } else {
-            uusi.add(loput);
+            if (loput.length() > 0) {
+                uusi.add(loput);
+            }
         }
 
         return uusi;
@@ -48,5 +55,9 @@ public class Node {
 
     public void setName(char name) {
         this.name = name;
+    }
+
+    public ArrayList<Node> getRoot() {
+        return this.lapset;
     }
 }

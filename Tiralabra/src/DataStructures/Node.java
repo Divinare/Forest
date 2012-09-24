@@ -1,6 +1,6 @@
 package DataStructures;
 
-public class Node {
+public class Node implements Cloneable {
 
     public int key;
     public int height;
@@ -30,5 +30,20 @@ public class Node {
 
     public int getHeight() {
         return height;
+    }
+
+    public Object clone()
+            throws CloneNotSupportedException {
+        Node clone = new Node(key, onkoNull);
+        if (this.left != null) {
+            clone.left = (Node) this.left.clone();
+            clone.left.parent = clone;
+        }
+        if (this.right != null) {
+            clone.right = (Node) this.right.clone();
+            clone.right.parent = clone;
+        }
+        clone.height = height;
+        return clone;
     }
 }

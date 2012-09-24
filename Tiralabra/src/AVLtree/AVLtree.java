@@ -17,12 +17,16 @@ public class AVLtree {
         // Tarkistetaan menikö puu epätasapainoon, jos meni niin suoritetaan tarvittavat kierrot
         while (p != null) {
             Node alipuu;
-            int vasemmanKorkeus = 0;
-            int oikeanKorkeus = 0;
+            int vasemmanKorkeus = -1;
+            int oikeanKorkeus = -1;
             if (p.left != null) {
+                System.out.println("vasen on " + p.left.key);
+                System.out.println("vasemman korkeus on " + p.left.height);
                 vasemmanKorkeus = p.left.height;
             }
             if (p.right != null) {
+                System.out.println("oikea on " + p.right.key);
+                System.out.println("oikean korkeus on " + p.right.height);
                 oikeanKorkeus = p.right.height;
             }
             // Aiheuttaako vanhemman vasen lapsi epätasapainon
@@ -31,9 +35,13 @@ public class AVLtree {
                 int vasemmanVasemmanKorkeus = 0;
                 int vasemmanOikeanKorkeus = 0;
                 if (p.left.left != null) {
+                    System.out.println("vasen vasen on " + p.left.left.key);
+                    System.out.println("vasen vasen korkeus on " + p.left.left.height);
                     vasemmanVasemmanKorkeus = p.left.left.height;
                 }
                 if (p.left.right != null) {
+                    System.out.println("vasen oikea on " + p.left.right.key);
+                    System.out.println("vasen oikea korkeus on " + p.left.right.height);
                     vasemmanOikeanKorkeus = p.left.right.height;
                 }
                 // onko syy vasemman lapsen vasemmassa vai oikeassa alipuussa?
@@ -57,8 +65,8 @@ public class AVLtree {
             // Aiheuttaako vanhemman oikea lapsi epätasapainon
             if (oikeanKorkeus == vasemmanKorkeus + 2) {
                 Node vanhempi = p.parent;
-                int oikeanOikeanKorkeus = 0;
-                int oikeanVasemmanKorkeus = 0;
+                int oikeanOikeanKorkeus = -1;
+                int oikeanVasemmanKorkeus = -1;
                 if (p.right.right != null) {
                     oikeanOikeanKorkeus = p.right.right.height;
                 }
@@ -83,6 +91,7 @@ public class AVLtree {
                 }
                 return;
             }
+            System.out.println("laitetaan korkeus solmuista " + p.key);
             p.height = laskeKorkeus(p);
             p = p.parent; // jatketaan kohti juurta
         }
