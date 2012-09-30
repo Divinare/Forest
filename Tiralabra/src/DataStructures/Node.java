@@ -3,7 +3,7 @@ package DataStructures;
 public class Node implements Cloneable {
 
     public int key;
-    public int height;
+//    public int height;
     public Node left;
     public Node right;
     public Node parent;
@@ -13,7 +13,7 @@ public class Node implements Cloneable {
     public Node(int key, boolean onkoNull) {
         this.key = key;
         this.onkoNull = onkoNull;
-        this.height = 0;
+//        this.height = 0;
     }
 
     public int getKey() {
@@ -29,6 +29,15 @@ public class Node implements Cloneable {
     }
 
     public int getHeight() {
+        if (parent == null) {
+            return 0;
+        }
+        Node p = parent;
+        int height = 0;
+        while (p != null) {
+            height++;
+            p = p.parent;
+        }
         return height;
     }
 
@@ -43,7 +52,7 @@ public class Node implements Cloneable {
             clone.right = (Node) this.right.clone();
             clone.right.parent = clone;
         }
-        clone.height = height;
+//        clone.height = height;
         return clone;
     }
 }

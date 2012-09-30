@@ -43,49 +43,59 @@ public class Binarytree implements Cloneable {
     }
 
     public Node delete(Node poistettava) {
-        // Poistettavalla ei ole lapsia:
-        if (poistettava.left == null && poistettava.right == null) {
-            Node vanhempi = poistettava.parent;
-            if (vanhempi == null) { // poistettava on puun ainoa solmu
-                this.root = null;
+        // Onko poistettava puussa
+        if (search(this.getRoot(), poistettava.key) != null) {
+            // Poistettavalla ei ole lapsia:
+            if (poistettava.left == null && poistettava.right == null) {
+                Node vanhempi = poistettava.parent;
+                if (vanhempi == null) { // poistettava on puun ainoa solmu
+                    this.root = null;
+                    return poistettava;
+                }
+                if (poistettava == vanhempi.left) {
+                    vanhempi.left = null;
+                } else {
+                    vanhempi.right = null;
+                }
                 return poistettava;
             }
-            if (poistettava == vanhempi.left) {
-                vanhempi.left = null;
-            } else {
-                vanhempi.right = null;
-            }
-            return poistettava;
-        }
-        // Poistettavalla on yksi lapsi
-        if (poistettava.left == null || poistettava.right == null) {
-            Node lapsi;
-            if (poistettava.left != null) {
-                lapsi = poistettava.left;
-            } else {
-                lapsi = poistettava.right;
-            }
-            Node vanhempi = poistettava.parent;
-            lapsi.parent = vanhempi;
-            if (vanhempi == null) { // poistettava on juuri
-                this.root = lapsi;
+            // Poistettavalla on yksi lapsi
+            if (poistettava.left == null || poistettava.right == null) {
+                Node lapsi;
+                if (poistettava.left != null) {
+                    lapsi = poistettava.left;
+                } else {
+                    lapsi = poistettava.right;
+                }
+                Node vanhempi = poistettava.parent;
+                lapsi.parent = vanhempi;
+                if (vanhempi == null) { // poistettava on juuri
+                    this.root = lapsi;
+                    return poistettava;
+                }
+                if (poistettava == vanhempi.left) {
+                    vanhempi.left = lapsi;
+                } else {
+                    vanhempi.right = lapsi;
+                }
                 return poistettava;
             }
+            // Poistettavalla on kaksi lasta
+            Node seuraaja = min(poistettava.right);
+            poistettava.key = seuraaja.key;
+            Node lapsi = seuraaja.right;
+            Node vanhempi = seuraaja.parent;
+            if (vanhempi.left == seuraaja) {
+                vanhempi.left = lapsi;
+            } else {
+                vanhempi.right = lapsi;
+            }
+            if (lapsi != null) {
+                lapsi.parent = vanhempi;
+            }
+            return seuraaja;
         }
-        // Poistettavalla on kaksi lasta
-        Node seuraaja = min(poistettava.right);
-        poistettava.key = seuraaja.key;
-        Node lapsi = seuraaja.right;
-        Node vanhempi = seuraaja.parent;
-        if (vanhempi.left == seuraaja) {
-            vanhempi.left = lapsi;
-        } else {
-            vanhempi.right = lapsi;
-        }
-        if (lapsi != null) {
-            lapsi.parent = vanhempi;
-        }
-        return seuraaja;
+        return null;
     }
 
     public Node search(Node x, int key) {
@@ -139,22 +149,23 @@ public class Binarytree implements Cloneable {
         }
     }
 
-    public void printLevelOrder() {
-        Binarytree binarytree = this;
-        LinkedList list = new LinkedList(binarytree.getRoot());
-        Node nykyinen = list.getHeadNode();
-        while (list.getSize() != 0) {
-            System.out.println(list.getHeadKey());
-            // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
-            if (nykyinen.left != null) {
-                list.add(nykyinen.left);
+    public void printLevelOrder(Node x) {
+        if (x != null) {
+            LinkedList list = new LinkedList(x);
+            Node nykyinen = list.getHeadNode();
+            while (list.getSize() != 0) {
+                System.out.println(list.getHeadKey());
+                // Jos jonon päällä on vasen lapsi, laitetaan se jonoon
+                if (nykyinen.left != null) {
+                    list.add(nykyinen.left);
+                }
+                // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
+                if (nykyinen.right != null) {
+                    list.add(nykyinen.right);
+                }
+                list.removeHead();
+                nykyinen = list.getHeadNode();
             }
-            // Jos jonon päällä on oikea lapsi, laitetaan se jonoon
-            if (nykyinen.right != null) {
-                list.add(nykyinen.right);
-            }
-            list.removeHead();
-            nykyinen = list.getHeadNode();
         }
     }
 

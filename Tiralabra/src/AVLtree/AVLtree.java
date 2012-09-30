@@ -3,12 +3,16 @@ package AVLtree;
 import DataStructures.Node;
 import DataStructures.LinkedList;
 
-public class AVLtree {
+public class AVLtree implements Cloneable {
 
     private Node root;
 
     public AVLtree(int key) {
         this.root = new Node(key, false);
+    }
+
+    public AVLtree(Node root) {
+        this.root = root;
     }
 
     public void AVLinsert(int key) {
@@ -17,35 +21,11 @@ public class AVLtree {
         // Tarkistetaan menikö puu epätasapainoon, jos meni niin suoritetaan tarvittavat kierrot
         while (p != null) {
             Node alipuu;
-            int vasemmanKorkeus = -1;
-            int oikeanKorkeus = -1;
-            if (p.left != null) {
-                System.out.println("vasen on " + p.left.key);
-                System.out.println("vasemman korkeus on " + p.left.height);
-                vasemmanKorkeus = p.left.height;
-            }
-            if (p.right != null) {
-                System.out.println("oikea on " + p.right.key);
-                System.out.println("oikean korkeus on " + p.right.height);
-                oikeanKorkeus = p.right.height;
-            }
             // Aiheuttaako vanhemman vasen lapsi epätasapainon
-            if (vasemmanKorkeus == oikeanKorkeus + 2) {
+            if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
                 Node vanhempi = p.parent;
-                int vasemmanVasemmanKorkeus = 0;
-                int vasemmanOikeanKorkeus = 0;
-                if (p.left.left != null) {
-                    System.out.println("vasen vasen on " + p.left.left.key);
-                    System.out.println("vasen vasen korkeus on " + p.left.left.height);
-                    vasemmanVasemmanKorkeus = p.left.left.height;
-                }
-                if (p.left.right != null) {
-                    System.out.println("vasen oikea on " + p.left.right.key);
-                    System.out.println("vasen oikea korkeus on " + p.left.right.height);
-                    vasemmanOikeanKorkeus = p.left.right.height;
-                }
                 // onko syy vasemman lapsen vasemmassa vai oikeassa alipuussa?
-                if (vasemmanVasemmanKorkeus > vasemmanOikeanKorkeus) {
+                if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
                     alipuu = rightRotate(p);
                 } else {
                     alipuu = leftRightRotate(p);
@@ -57,24 +37,16 @@ public class AVLtree {
                 } else {
                     vanhempi.right = alipuu;
                 }
-                if (vanhempi != null) {
-                    vanhempi.height = laskeKorkeus(vanhempi);
-                }
+//                if (vanhempi != null) {
+//                    vanhempi.height = laskeKorkeus(vanhempi);
+//                }
                 return;
             }
             // Aiheuttaako vanhemman oikea lapsi epätasapainon
-            if (oikeanKorkeus == vasemmanKorkeus + 2) {
+            if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
                 Node vanhempi = p.parent;
-                int oikeanOikeanKorkeus = -1;
-                int oikeanVasemmanKorkeus = -1;
-                if (p.right.right != null) {
-                    oikeanOikeanKorkeus = p.right.right.height;
-                }
-                if (p.right.left != null) {
-                    oikeanVasemmanKorkeus = p.right.left.height;
-                }
                 // onko syy vasemman lapsen oikeassa vai vasemmassa alipuussa?
-                if (oikeanOikeanKorkeus > oikeanVasemmanKorkeus) {
+                if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
                     alipuu = leftRotate(p);
                 } else {
                     alipuu = rightLeftRotate(p);
@@ -86,18 +58,17 @@ public class AVLtree {
                 } else {
                     vanhempi.right = alipuu;
                 }
-                if (vanhempi != null) {
-                    vanhempi.height = laskeKorkeus(vanhempi);
-                }
+//                if (vanhempi != null) {
+//                    vanhempi.height = laskeKorkeus(vanhempi);
+//                }
                 return;
             }
-            System.out.println("laitetaan korkeus solmuista " + p.key);
-            p.height = laskeKorkeus(p);
+//            p.height = laskeKorkeus(p);
             p = p.parent; // jatketaan kohti juurta
         }
     }
 
-    public Node insert(int key) {
+    private Node insert(int key) {
         Node uusi = new Node(key, false);
         if (root == null) {
             root = uusi;
@@ -115,7 +86,7 @@ public class AVLtree {
                 x = x.right;
             }
         }
-        uusi.height = height;
+//        uusi.height = height;
         uusi.parent = p;
 
 
@@ -127,7 +98,92 @@ public class AVLtree {
         return uusi;
     }
 
-    public Node rightRotate(Node k1) {
+    public void AVLdelete(Node poistettava) {
+        Node poistettu = delete(poistettava);
+        // Jos poistettiin jotain
+        if (poistettu != null) {
+            Node p = poistettu.parent;
+            while (p != null) {
+                Node vanhempi = p.parent;
+                if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
+                    if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right) + 2) {
+                        rightRotate(p);
+                    } else {
+                        leftRightRotate(p);
+                    }
+                }
+                if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
+                    if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
+                        leftRotate(p);
+                    } else {
+                        leftRightRotate(p);
+                    }
+                }
+//            if (p == this.root) { // jos p oli puun juuri
+//                this.root = alipuu;
+//            }
+                p = vanhempi;
+            }
+        }
+    }
+
+    private Node delete(Node poistettava) {
+        // Onko poistettava puussa
+        if (search(this.getRoot(), poistettava.key) != null) {
+            // Poistettavalla ei ole lapsia:
+            if (poistettava.left == null && poistettava.right == null) {
+                Node vanhempi = poistettava.parent;
+                if (vanhempi == null) { // poistettava on puun ainoa solmu
+                    this.root = null;
+                    return poistettava;
+                }
+                if (poistettava == vanhempi.left) {
+                    vanhempi.left = null;
+                } else {
+                    vanhempi.right = null;
+                }
+                return poistettava;
+            }
+            // Poistettavalla on yksi lapsi
+            if (poistettava.left == null || poistettava.right == null) {
+                Node lapsi;
+                if (poistettava.left != null) {
+                    lapsi = poistettava.left;
+                } else {
+                    lapsi = poistettava.right;
+                }
+                Node vanhempi = poistettava.parent;
+                lapsi.parent = vanhempi;
+                if (vanhempi == null) { // poistettava on juuri
+                    this.root = lapsi;
+                    return poistettava;
+                }
+                if (poistettava == vanhempi.left) {
+                    vanhempi.left = lapsi;
+                } else {
+                    vanhempi.right = lapsi;
+                }
+                return poistettava;
+            }
+            // Poistettavalla on kaksi lasta
+            Node seuraaja = min(poistettava.right);
+            poistettava.key = seuraaja.key;
+            Node lapsi = seuraaja.right;
+            Node vanhempi = seuraaja.parent;
+            if (vanhempi.left == seuraaja) {
+                vanhempi.left = lapsi;
+            } else {
+                vanhempi.right = lapsi;
+            }
+            if (lapsi != null) {
+                lapsi.parent = vanhempi;
+            }
+            return seuraaja;
+        }
+        return null;
+    }
+
+    private Node rightRotate(Node k1) {
         Node k2 = k1.left;
         k2.parent = k1.parent;
         k1.parent = k2;
@@ -136,12 +192,12 @@ public class AVLtree {
         if (k1.left != null) {
             k1.left.parent = k1;
         }
-        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
-        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
+//        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
+//        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
         return k2;
     }
 
-    public Node leftRotate(Node k1) {
+    private Node leftRotate(Node k1) {
         Node k2 = k1.right;
         k2.parent = k1.parent;
         k1.parent = k2;
@@ -150,18 +206,18 @@ public class AVLtree {
         if (k1.right != null) {
             k1.right.parent = k1;
         }
-        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
-        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
+//        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
+//        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
         return k2;
     }
 
-    public Node rightLeftRotate(Node k1) {
+    private Node rightLeftRotate(Node k1) {
         Node k2 = k1.right;
         k1.right = rightRotate(k2);
         return leftRotate(k1);
     }
 
-    public Node leftRightRotate(Node k1) {
+    private Node leftRightRotate(Node k1) {
         Node k2 = k1.left;
         k1.left = leftRotate(k2);
         return rightRotate(k1);
@@ -237,14 +293,16 @@ public class AVLtree {
         }
     }
 
-    public void printTree() {
+    public void printTree() throws CloneNotSupportedException {
         int korkeus = laskeKorkeus(this.getRoot());
         int tamanHetkinenKorkeus = korkeus;
         int solmujenMaara = 1;
         int korkeudenLaskemisraja = 1;
         boolean tulostetaankoEkatValit = true;
         // Tehdään puusta "täydellinen" puu
-        AVLtree avltree = teePuustaTaydellinen(this, korkeus);
+
+        AVLtree copyTree = (AVLtree) this.clone();
+        AVLtree avltree = teePuustaTaydellinen(copyTree, korkeus);
 
         LinkedList list = new LinkedList(avltree.getRoot());
         Node nykyinen = list.getHeadNode();
@@ -351,4 +409,34 @@ public class AVLtree {
     public Node getRoot() {
         return root;
     }
+
+    protected Object clone()
+            throws CloneNotSupportedException {
+        Node clone = (Node) this.getRoot().clone();
+        AVLtree cloneTree = new AVLtree(clone);
+
+        return cloneTree;
+
+    }
 }
+//TURHAA:
+//                int vasemmanVasemmanKorkeus = 0;
+//                int vasemmanOikeanKorkeus = 0;
+//                if (p.left.left != null) {
+//                    System.out.println("vasen vasen on " + p.left.left.key);
+//                    System.out.println("vasen vasen korkeus on " + p.left.left.height);
+//                    vasemmanVasemmanKorkeus = p.left.left.height;
+//                }
+//                if (p.left.right != null) {
+//                    System.out.println("vasen oikea on " + p.left.right.key);
+//                    System.out.println("vasen oikea korkeus on " + p.left.right.height);
+//                    vasemmanOikeanKorkeus = p.left.right.height;
+//                }
+//                int oikeanOikeanKorkeus = 0;
+//                int oikeanVasemmanKorkeus = 0;
+//                if (p.right.right != null) {
+//                    oikeanOikeanKorkeus = p.right.right.height;
+//                }
+//                if (p.right.left != null) {
+//                    oikeanVasemmanKorkeus = p.right.left.height;
+//                }
