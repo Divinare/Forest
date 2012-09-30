@@ -102,27 +102,42 @@ public class AVLtree implements Cloneable {
         Node poistettu = delete(poistettava);
         // Jos poistettiin jotain
         if (poistettu != null) {
+            Node alipuu;
             Node p = poistettu.parent;
             while (p != null) {
-                Node vanhempi = p.parent;
+                Node parent = p.parent;
                 if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
-                    if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right) + 2) {
-                        rightRotate(p);
+                    if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
+                        alipuu = rightRotate(p);
                     } else {
-                        leftRightRotate(p);
+                        alipuu = leftRightRotate(p);
                     }
-                }
-                if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
+                    // Asetetaan vanhempi oikein
+                    if (parent == null) {
+                        this.root = alipuu;
+                    } else if (parent.left == p) {
+                        parent.left = alipuu;
+                    } else {
+                        parent.right = alipuu;
+                    }
+
+                } else if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
                     if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
-                        leftRotate(p);
+                        alipuu = leftRotate(p);
                     } else {
-                        leftRightRotate(p);
+                        alipuu = leftRightRotate(p);
+                    }
+                    // Asetetaan vanhempi oikein
+                    if (parent == null) {
+                        this.root = alipuu;
+                    } else if (parent.left == p) {
+                        parent.left = alipuu;
+                    } else {
+                        parent.right = alipuu;
                     }
                 }
-//            if (p == this.root) { // jos p oli puun juuri
-//                this.root = alipuu;
-//            }
-                p = vanhempi;
+                // Jatketaan kohti juurta
+                p = parent;
             }
         }
     }
@@ -130,6 +145,7 @@ public class AVLtree implements Cloneable {
     private Node delete(Node poistettava) {
         // Onko poistettava puussa
         if (search(this.getRoot(), poistettava.key) != null) {
+
             // Poistettavalla ei ole lapsia:
             if (poistettava.left == null && poistettava.right == null) {
                 Node vanhempi = poistettava.parent;
@@ -183,44 +199,44 @@ public class AVLtree implements Cloneable {
         return null;
     }
 
-    private Node rightRotate(Node k1) {
-        Node k2 = k1.left;
-        k2.parent = k1.parent;
-        k1.parent = k2;
-        k1.left = k2.right;
-        k2.right = k1;
-        if (k1.left != null) {
-            k1.left.parent = k1;
+    private Node rightRotate(Node x) {
+        Node xLeft = x.left;
+        xLeft.parent = x.parent;
+        x.parent = xLeft;
+        x.left = xLeft.right;
+        xLeft.right = x;
+        if (x.left != null) {
+            x.left.parent = x;
         }
 //        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
 //        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
-        return k2;
+        return xLeft;
     }
 
-    private Node leftRotate(Node k1) {
-        Node k2 = k1.right;
-        k2.parent = k1.parent;
-        k1.parent = k2;
-        k1.right = k2.left;
-        k2.left = k1;
-        if (k1.right != null) {
-            k1.right.parent = k1;
+    private Node leftRotate(Node x) {
+        Node xRight = x.right;
+        xRight.parent = x.parent;
+        x.parent = xRight;
+        x.right = xRight.left;
+        xRight.left = x;
+        if (x.right != null) {
+            x.right.parent = x;
         }
 //        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
 //        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
-        return k2;
+        return xRight;
     }
 
-    private Node rightLeftRotate(Node k1) {
-        Node k2 = k1.right;
-        k1.right = rightRotate(k2);
-        return leftRotate(k1);
+    private Node rightLeftRotate(Node x) {
+        Node xRight = x.right;
+        x.right = rightRotate(xRight);
+        return leftRotate(x);
     }
 
-    private Node leftRightRotate(Node k1) {
-        Node k2 = k1.left;
-        k1.left = leftRotate(k2);
-        return rightRotate(k1);
+    private Node leftRightRotate(Node x) {
+        Node xLeft = x.left;
+        x.left = leftRotate(xLeft);
+        return rightRotate(x);
     }
 
     public Node min(Node x) {
