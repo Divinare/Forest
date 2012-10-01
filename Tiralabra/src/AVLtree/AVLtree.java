@@ -3,18 +3,34 @@ package AVLtree;
 import DataStructures.Node;
 import DataStructures.LinkedList;
 
+/**
+ *
+ * @author joeniemi
+ */
 public class AVLtree implements Cloneable {
 
     private Node root;
 
+    /**
+     *
+     * @param key
+     */
     public AVLtree(int key) {
         this.root = new Node(key, false);
     }
 
+    /**
+     *
+     * @param root
+     */
     public AVLtree(Node root) {
         this.root = root;
     }
 
+    /**
+     *
+     * @param key
+     */
     public void AVLinsert(int key) {
         Node uusi = insert(key);
         Node p = uusi.parent;
@@ -37,9 +53,6 @@ public class AVLtree implements Cloneable {
                 } else {
                     vanhempi.right = alipuu;
                 }
-//                if (vanhempi != null) {
-//                    vanhempi.height = laskeKorkeus(vanhempi);
-//                }
                 return;
             }
             // Aiheuttaako vanhemman oikea lapsi epätasapainon
@@ -58,12 +71,8 @@ public class AVLtree implements Cloneable {
                 } else {
                     vanhempi.right = alipuu;
                 }
-//                if (vanhempi != null) {
-//                    vanhempi.height = laskeKorkeus(vanhempi);
-//                }
                 return;
             }
-//            p.height = laskeKorkeus(p);
             p = p.parent; // jatketaan kohti juurta
         }
     }
@@ -86,7 +95,6 @@ public class AVLtree implements Cloneable {
                 x = x.right;
             }
         }
-//        uusi.height = height;
         uusi.parent = p;
 
 
@@ -98,6 +106,10 @@ public class AVLtree implements Cloneable {
         return uusi;
     }
 
+    /**
+     *
+     * @param poistettava
+     */
     public void AVLdelete(Node poistettava) {
         Node poistettu = delete(poistettava);
         // Jos poistettiin jotain
@@ -141,6 +153,8 @@ public class AVLtree implements Cloneable {
             }
         }
     }
+
+  
 
     private Node delete(Node poistettava) {
         // Onko poistettava puussa
@@ -208,8 +222,6 @@ public class AVLtree implements Cloneable {
         if (x.left != null) {
             x.left.parent = x;
         }
-//        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
-//        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
         return xLeft;
     }
 
@@ -222,8 +234,6 @@ public class AVLtree implements Cloneable {
         if (x.right != null) {
             x.right.parent = x;
         }
-//        k1.height = Math.max(laskeKorkeus(k1.left), laskeKorkeus(k1.right)) + 1;
-//        k2.height = Math.max(laskeKorkeus(k2.left), laskeKorkeus(k2.right)) + 1;
         return xRight;
     }
 
@@ -239,6 +249,11 @@ public class AVLtree implements Cloneable {
         return rightRotate(x);
     }
 
+    /**
+     *
+     * @param x
+     * @return
+     */
     public Node min(Node x) {
         while (x.left != null) {
             x = x.left;
@@ -246,6 +261,11 @@ public class AVLtree implements Cloneable {
         return x;
     }
 
+    /**
+     *
+     * @param x
+     * @return
+     */
     public Node max(Node x) {
         while (x.right != null) {
             x = x.right;
@@ -253,6 +273,12 @@ public class AVLtree implements Cloneable {
         return x;
     }
 
+    /**
+     *
+     * @param x
+     * @param key
+     * @return
+     */
     public Node search(Node x, int key) {
         if (x == null || x.key == key) {
             return x;
@@ -264,6 +290,11 @@ public class AVLtree implements Cloneable {
         }
     }
 
+    /**
+     *
+     * @param x
+     * @return
+     */
     public int laskeKorkeus(Node x) {
         if (x == null) {
             return -1;
@@ -273,6 +304,10 @@ public class AVLtree implements Cloneable {
         return Math.max(k1, k2) + 1;
     }
 
+    /**
+     *
+     * @param x
+     */
     public void printInOrder(Node x) {
         if (x != null) {
             printInOrder(x.left);
@@ -281,6 +316,10 @@ public class AVLtree implements Cloneable {
         }
     }
 
+    /**
+     *
+     * @param x
+     */
     public void printPreOrder(Node x) {
         if (x != null) {
             System.out.println(x.key);
@@ -290,6 +329,9 @@ public class AVLtree implements Cloneable {
         }
     }
 
+    /**
+     *
+     */
     public void printLevelOrder() {
         AVLtree AVLtree = this;
         LinkedList list = new LinkedList(AVLtree.getRoot());
@@ -309,6 +351,10 @@ public class AVLtree implements Cloneable {
         }
     }
 
+    /**
+     *
+     * @throws CloneNotSupportedException
+     */
     public void printTree() throws CloneNotSupportedException {
         int korkeus = laskeKorkeus(this.getRoot());
         int tamanHetkinenKorkeus = korkeus;
@@ -422,10 +468,19 @@ public class AVLtree implements Cloneable {
         return tree;
     }
 
+    /**
+     *
+     * @return
+     */
     public Node getRoot() {
         return root;
     }
 
+    /**
+     *
+     * @return
+     * @throws CloneNotSupportedException
+     */
     protected Object clone()
             throws CloneNotSupportedException {
         Node clone = (Node) this.getRoot().clone();
@@ -435,24 +490,3 @@ public class AVLtree implements Cloneable {
 
     }
 }
-//TURHAA:
-//                int vasemmanVasemmanKorkeus = 0;
-//                int vasemmanOikeanKorkeus = 0;
-//                if (p.left.left != null) {
-//                    System.out.println("vasen vasen on " + p.left.left.key);
-//                    System.out.println("vasen vasen korkeus on " + p.left.left.height);
-//                    vasemmanVasemmanKorkeus = p.left.left.height;
-//                }
-//                if (p.left.right != null) {
-//                    System.out.println("vasen oikea on " + p.left.right.key);
-//                    System.out.println("vasen oikea korkeus on " + p.left.right.height);
-//                    vasemmanOikeanKorkeus = p.left.right.height;
-//                }
-//                int oikeanOikeanKorkeus = 0;
-//                int oikeanVasemmanKorkeus = 0;
-//                if (p.right.right != null) {
-//                    oikeanOikeanKorkeus = p.right.right.height;
-//                }
-//                if (p.right.left != null) {
-//                    oikeanVasemmanKorkeus = p.right.left.height;
-//                }

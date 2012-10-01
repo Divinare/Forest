@@ -2,10 +2,11 @@ package Trietree;
 
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Comparable<Node> {
 
-    private char name;
+    private Character name;
     private ArrayList<Node> lapset;
+    private int koko;
 
     public Node() {
         lapset = new ArrayList();
@@ -59,5 +60,10 @@ public class Node {
 
     public ArrayList<Node> getRoot() {
         return this.lapset;
+    }
+
+    @Override
+    public int compareTo(Node toinen) {
+       return this.name.compareTo(toinen.name);
     }
 }

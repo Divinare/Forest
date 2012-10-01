@@ -57,7 +57,32 @@ public class Trietree {
         Node tyhja = null;
         return tyhja; // :D
     }
+
+    public void tulostaSisalto(ArrayList<Node> lista, int index) {
+        if (lista.size() <= index) {
+            return;
+        }
+        if (lista.get(index) == null) {
+
+            return;
+        }
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.print(lista.get(i).getName());
+
+            tulostaSisalto(lista.get(i).getRoot(), index);
+        }
+    }
     
+    public void tulosta(ArrayList<Node> lista) {
+        for (int i = 0; i < lista.size(); i++) {
+            
+            System.out.print(lista.get(i).getName());
+            tulosta(lista.get(i).getRoot());
+            System.out.println("");
+            
+        }
+    }
+
     public ArrayList<Node> getRoot() {
         return this.juuri;
     }

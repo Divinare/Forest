@@ -1,25 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Binarytree;
 
 import Binarytree.Binarytree;
 import DataStructures.Node;
 import junit.framework.TestCase;
 
-/**
- *
- * @author joeniemi
- */
 public class BinarytreeTest extends TestCase {
-    
+
     private Binarytree binarytree;
-    
+
     public BinarytreeTest(String testName) {
         super(testName);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -29,14 +21,15 @@ public class BinarytreeTest extends TestCase {
         binarytree.insert(3);
         binarytree.insert(2);
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }
 
     public void testInsert() {
-        assertEquals("juuri ei ollut 7 ",7, binarytree.getRoot().getKey());
+        // Testataan setUpissa tehdyt insertit
+        assertEquals("juuri ei ollut 7 ", 7, binarytree.getRoot().getKey());
         assertEquals(5, binarytree.getRoot().getLeft().getKey());
         assertEquals(8, binarytree.getRoot().getRight().getKey());
         assertEquals(3, binarytree.getRoot().getLeft().getLeft().getKey());
@@ -47,14 +40,12 @@ public class BinarytreeTest extends TestCase {
     }
 
     public void testDelete() {
-//        System.out.println("delete");
-//        Node poistettava = null;
-//        Binarytree instance = null;
-//        Node expResult = null;
-//        Node result = instance.delete(poistettava);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        binarytree.delete(binarytree.search(binarytree.getRoot(), 2));
+        assertEquals("delete ei toimi oikein, kun ei ollut lapsia", null, binarytree.getRoot().left.left.right);
+        binarytree.delete(binarytree.search(binarytree.getRoot(), 5));
+        assertEquals("delete ei toimi oikein, kun lapsia oli 1", 3, binarytree.getRoot().left.key);
+        binarytree.delete(binarytree.search(binarytree.getRoot(), 7));
+        assertEquals("delete ei toimi oikein kun juuri poistettiin ja kun lapsia oli 2", 8, binarytree.getRoot().key);
     }
 
     public void testSearch() {
@@ -76,6 +67,11 @@ public class BinarytreeTest extends TestCase {
     }
 
     public void testLaskeKorkeus() {
+        int kolmenKorkeus = binarytree.laskeKorkeus(binarytree.search(binarytree.getRoot(), 3));
+        int kahdenKorkeus = binarytree.laskeKorkeus(binarytree.search(binarytree.getRoot(), 2));
+        assertEquals("korkeuden laskeminen ei toiminut oikein", 1, kolmenKorkeus);
+        assertEquals("korkeuden laskeminen ei toiminut oikein", 0, kahdenKorkeus);
+        assertEquals("korkeuden laskeminen ei toiminut oikein", 3, binarytree.laskeKorkeus(binarytree.getRoot()));
         
     }
 }
