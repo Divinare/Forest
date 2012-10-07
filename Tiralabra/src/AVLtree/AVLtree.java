@@ -3,15 +3,12 @@ package AVLtree;
 import DataStructures.Node;
 import DataStructures.LinkedList;
 
-/**
- *
- * @author joeniemi
- */
 public class AVLtree implements Cloneable {
 
     private Node root;
 
     /**
+     * Konstruktori, jolle annetaan juuren avain
      *
      * @param key
      */
@@ -20,6 +17,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Konstruktori, jolle annetaan juuri solmuna
      *
      * @param root
      */
@@ -28,6 +26,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * AVLpuun lisäys, joka tarvittaessa korjaa epätasapainon
      *
      * @param key
      */
@@ -39,38 +38,28 @@ public class AVLtree implements Cloneable {
             Node alipuu;
             // Aiheuttaako vanhemman vasen lapsi epätasapainon
             if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
-                Node vanhempi = p.parent;
+                Node parent = p.parent;
                 // onko syy vasemman lapsen vasemmassa vai oikeassa alipuussa?
                 if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
                     alipuu = rightRotate(p);
                 } else {
                     alipuu = leftRightRotate(p);
                 }
-                if (vanhempi == null) {
-                    this.root = alipuu;
-                } else if (vanhempi.left == p) {
-                    vanhempi.left = alipuu;
-                } else {
-                    vanhempi.right = alipuu;
-                }
+                // Asetetaan vanhempi oikein
+                asetaVanhempi(parent, alipuu, p);
                 return;
             }
             // Aiheuttaako vanhemman oikea lapsi epätasapainon
             if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
-                Node vanhempi = p.parent;
+                Node parent = p.parent;
                 // onko syy vasemman lapsen oikeassa vai vasemmassa alipuussa?
                 if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
                     alipuu = leftRotate(p);
                 } else {
                     alipuu = rightLeftRotate(p);
                 }
-                if (vanhempi == null) {
-                    this.root = alipuu;
-                } else if (vanhempi.left == p) {
-                    vanhempi.left = alipuu;
-                } else {
-                    vanhempi.right = alipuu;
-                }
+                // Asetetaan vanhempi oikein
+                asetaVanhempi(parent, alipuu, p);
                 return;
             }
             p = p.parent; // jatketaan kohti juurta
@@ -107,6 +96,8 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * AVLpuusta solmun poistava metodi, joka tarvittaessa korjaa syntyneen
+     * epätasapainon
      *
      * @param poistettava
      */
@@ -125,13 +116,7 @@ public class AVLtree implements Cloneable {
                         alipuu = leftRightRotate(p);
                     }
                     // Asetetaan vanhempi oikein
-                    if (parent == null) {
-                        this.root = alipuu;
-                    } else if (parent.left == p) {
-                        parent.left = alipuu;
-                    } else {
-                        parent.right = alipuu;
-                    }
+                    asetaVanhempi(parent, alipuu, p);
 
                 } else if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
                     if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
@@ -140,13 +125,7 @@ public class AVLtree implements Cloneable {
                         alipuu = leftRightRotate(p);
                     }
                     // Asetetaan vanhempi oikein
-                    if (parent == null) {
-                        this.root = alipuu;
-                    } else if (parent.left == p) {
-                        parent.left = alipuu;
-                    } else {
-                        parent.right = alipuu;
-                    }
+                    asetaVanhempi(parent, alipuu, p);
                 }
                 // Jatketaan kohti juurta
                 p = parent;
@@ -154,7 +133,16 @@ public class AVLtree implements Cloneable {
         }
     }
 
-  
+    private void asetaVanhempi(Node parent, Node alipuu, Node p) {
+        // p on poistetun vanhempi
+        if (parent == null) {
+            this.root = alipuu;
+        } else if (parent.left == p) {
+            parent.left = alipuu;
+        } else {
+            parent.right = alipuu;
+        }
+    }
 
     private Node delete(Node poistettava) {
         // Onko poistettava puussa
@@ -250,9 +238,10 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Palauttaa minimin
      *
-     * @param x
-     * @return
+     * @param x Node, josta kohtaa puuta lähdetään minimiä etsimään
+     * @return Node minimi
      */
     public Node min(Node x) {
         while (x.left != null) {
@@ -262,9 +251,10 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Palauttaa maximin
      *
-     * @param x
-     * @return
+     * @param x Node, josta kohtaa puuta lähdetään maximia etsimään
+     * @return Node maximi
      */
     public Node max(Node x) {
         while (x.right != null) {
@@ -274,10 +264,11 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Etsii puusta haettavan arvon
      *
-     * @param x
-     * @param key
-     * @return
+     * @param x Node, josta kohtaa puuta lähdetään arvoa etsimään
+     * @param key arvo, joka halutaan etsiä
+     * @return Node, jota etsittiin tai null jos ei löytynyt
      */
     public Node search(Node x, int key) {
         if (x == null || x.key == key) {
@@ -291,9 +282,10 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Laskee puun korkeuden
      *
-     * @param x
-     * @return
+     * @param x Node, josta kohtaa puun korkeutta lähdetään laskemaan
+     * @return puun korkeus
      */
     public int laskeKorkeus(Node x) {
         if (x == null) {
@@ -305,6 +297,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Tulostaa puun sisäjärjestyksessä
      *
      * @param x
      */
@@ -317,6 +310,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Tulostaa puun esijärjestyksessä
      *
      * @param x
      */
@@ -330,7 +324,9 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Tulostaa puun tasojärjestyksessä
      *
+     * @param x
      */
     public void printLevelOrder() {
         AVLtree AVLtree = this;
@@ -352,6 +348,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Tulostaa puun graafiseen tyyliin
      *
      * @throws CloneNotSupportedException
      */
@@ -469,6 +466,7 @@ public class AVLtree implements Cloneable {
     }
 
     /**
+     * Palauttaa puun juuren
      *
      * @return
      */
@@ -478,8 +476,7 @@ public class AVLtree implements Cloneable {
 
     /**
      *
-     * @return
-     * @throws CloneNotSupportedException
+     * @return @throws CloneNotSupportedException
      */
     protected Object clone()
             throws CloneNotSupportedException {

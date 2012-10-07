@@ -34,6 +34,9 @@ public class Main {
         System.out.println("poistetaan 1:");
         avltree.AVLdelete(avltree.search(avltree.getRoot(), 1));
         avltree.printTree();
+        System.out.println("poistetaan 7:");
+        avltree.AVLdelete(avltree.search(avltree.getRoot(), 7));
+        avltree.printTree();
 //        System.out.println("poistetaan 5:");
 //        avltree.AVLdelete(avltree.search(avltree.getRoot(), 5));
 //        avltree.printTree();

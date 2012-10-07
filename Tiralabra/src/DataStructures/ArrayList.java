@@ -6,7 +6,7 @@ public class ArrayList {
     private Object[] taulu;
 
     public ArrayList() {
-        this.size = 10;
+        this.size = 0;
     }
 
     public boolean remove(Object o) {
@@ -34,37 +34,71 @@ public class ArrayList {
         }
         return false;
     }
-    
+
     public void add(Object o) {
-        for (int i = 0; i < size; i++) {
-            if (taulu[i] == null) {
-                taulu[i] = o;
-                return;
+        if (size == 0) {
+            taulu = new Object[1];
+            taulu[0] = o;
+            size++;
+        } else {
+            if (size == taulu.length) {
+                Object[] uusiTaulu = new Object[taulu.length * 2];
+                System.arraycopy(taulu, 0, uusiTaulu, 0, taulu.length);
+                taulu = uusiTaulu;
             }
+            taulu[size] = o;
+            size++;
         }
-        Object[] uusiTaulu = new Object[size*2];
-        System.arraycopy(taulu, 0, uusiTaulu, size-1, size);
-        taulu = uusiTaulu;
-        uusiTaulu[size] = o;
-        size = size*2;
     }
 
-    public int indexOf(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (taulu[i] == null) {
-                    return i;
-                }
-            }
+    public void add(Object o, int index) {
+        if (size == 0 && index == 0) {
+            taulu = new Object[1];
+            taulu[0] = o;
+            size++;
         } else {
-            for (int i = 0; i < size; i++) {
-                if (o.equals(taulu[i])) {
-                    return i;
-                }
+            if (size == taulu.length) {
+                Object[] uusiTaulu = new Object[taulu.length * 2];
+                System.arraycopy(taulu, 0, uusiTaulu, 0, taulu.length);
+                taulu = uusiTaulu;
+            }
+            Object[] loppuosa = new Object[taulu.length-index];
+            System.arraycopy(loppuosa, index, taulu, 0, taulu.length-index);
+            taulu[index] = o;
+            System.arraycopy(taulu, index, loppuosa, 0, loppuosa.length);
+            size++;
+    }
+}
+public boolean isEmpty() {
+        for (int i = 0; i < taulu.length; i++) {
+            if (taulu[i] != null) {
+                return false;
             }
         }
-        return -1;
+        return true;
     }
+    
+    public Object get(int i) {
+        return taulu[i];
+    }
+    
+
+//    public int indexOf(Object o) {
+//        if (o == null) {
+//            for (int i = 0; i < size; i++) {
+//                if (taulu[i] == null) {
+//                    return i;
+//                }
+//            }
+//        } else {
+//            for (int i = 0; i < size; i++) {
+//                if (o.equals(taulu[i])) {
+//                    return i;
+//                }
+//            }
+//        }
+//        return -1;
+//    }
 
     public int size() {
         return size;

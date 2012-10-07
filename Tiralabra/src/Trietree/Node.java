@@ -6,10 +6,11 @@ public class Node implements Comparable<Node> {
 
     private Character name;
     private ArrayList<Node> lapset;
-    private int koko;
+    private int size;
 
     public Node() {
         lapset = new ArrayList();
+        size = 1;
     }
 
     public boolean containsChild(char c) {
@@ -27,7 +28,12 @@ public class Node implements Comparable<Node> {
         if (uusi == null) {
             uusi = new Node();
             uusi.setName(sana.charAt(0));
-            lapset.add(uusi);
+            if (lapset.isEmpty()) {
+                lapset.add(uusi);
+            } else {
+                int paikka = compareTo(uusi);
+                lapset.add(paikka, uusi);
+            }
             if (loput.length() > 0) {
                 uusi.add(loput);
             }
@@ -38,6 +44,21 @@ public class Node implements Comparable<Node> {
         }
 
         return uusi;
+    }
+
+    public boolean remove(String sana) {
+        Node poistettava = getChild(sana.charAt(0));
+
+        if (sana.length() > 1) {
+            String loput = sana.substring(1);
+            poistettava.remove(loput);
+        }
+        if (poistettava.size() > 1) {
+            poistettava.decreaseSize();
+        } else {
+            lapset.remove(poistettava);
+        }
+        return true;
     }
 
     public Node getChild(char c) {
@@ -53,6 +74,9 @@ public class Node implements Comparable<Node> {
     public char getName() {
         return name;
     }
+    public Character getNamechar() {
+        return name;
+    }
 
     public void setName(char name) {
         this.name = name;
@@ -62,8 +86,31 @@ public class Node implements Comparable<Node> {
         return this.lapset;
     }
 
+    public int size() {
+        return size;
+    }
+
+    public void increaseSize() {
+        size++;
+    }
+
+    public void decreaseSize() {
+        size--;
+    }
+
+    public int getLapsetSize() {
+        return lapset.size();
+    }
+
     @Override
-    public int compareTo(Node toinen) {
-       return this.name.compareTo(toinen.name);
+    public int compareTo(Node uusi) {
+        int paikka = 0;
+        while (true) {
+            if (lapset.get(paikka).name.compareTo(uusi.name) > 0) {
+                break;
+            }
+            paikka++;
+        }
+        return paikka;
     }
 }

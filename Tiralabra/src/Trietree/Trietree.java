@@ -2,7 +2,7 @@ package Trietree;
 
 import java.util.ArrayList;
 
-public class Trietree {
+public class Trietree implements Comparable<Node> {
 
     private ArrayList<Node> juuri;
 
@@ -12,20 +12,44 @@ public class Trietree {
 
     public void add(String sana) {
 
-        Node uusi = this.getChild(sana.charAt(0));
+        Node uusi = getChild(sana.charAt(0));
         String loput = sana.substring(1);
         if (uusi == null) {
             uusi = new Node();
             uusi.setName(sana.charAt(0));
-            juuri.add(uusi);
+            if (juuri.isEmpty()) {
+                juuri.add(uusi);
+            } else {
+                int paikka = compareTo(uusi);
+                juuri.add(paikka, uusi);
+            }
             if (loput.length() > 0) {
                 uusi.add(loput);
             }
         } else {
             if (loput.length() > 0) {
                 uusi.add(loput);
+                uusi.increaseSize();
             }
         }
+    }
+
+    public boolean remove(String sana) {
+        if (etsiSana(sana) == false) {
+            return false;
+        }
+        Node poistettava = getChild(sana.charAt(0));
+
+        if (sana.length() > 1) {
+            String loput = sana.substring(1);
+            poistettava.remove(loput);
+        }
+        if (poistettava.size() > 1) {
+            poistettava.decreaseSize();
+        } else {
+            juuri.remove(poistettava);
+        }
+        return true;
     }
 
     public boolean etsiSana(String sana) {
@@ -45,6 +69,11 @@ public class Trietree {
                 return false; // Jos kirjainta ei löytynyt
             }
         }
+        // Katsotaan, jatkuuko sana eli esim jos puussa on sana sukka ja etsitään suk,
+        // metodin täytyy palauttaa false ellei suk sanaa ole oikeasti puussa
+        if (current.getLapsetSize() == current.size()) {
+            return false;
+        }
         return true;
     }
 
@@ -58,32 +87,33 @@ public class Trietree {
         return tyhja; // :D
     }
 
-    public void tulostaSisalto(ArrayList<Node> lista, int index) {
-        if (lista.size() <= index) {
-            return;
-        }
-        if (lista.get(index) == null) {
-
-            return;
-        }
-        for (int i = 0; i < lista.size(); i++) {
-            System.out.print(lista.get(i).getName());
-
-            tulostaSisalto(lista.get(i).getRoot(), index);
-        }
-    }
-    
-    public void tulosta(ArrayList<Node> lista) {
-        for (int i = 0; i < lista.size(); i++) {
-            
-            System.out.print(lista.get(i).getName());
-            tulosta(lista.get(i).getRoot());
+    public void tulostaSisalto(ArrayList<Node> lista) {
+        if (lista.size() == 0) {
             System.out.println("");
-            
+        }
+
+
+        for (int i = 0; i < lista.size(); i++) {
+//            for (int j = 0; j < lista.get(i).size(); j++) {
+            System.out.print(lista.get(i).getName());
+            tulostaSisalto(lista.get(i).getRoot());
+//            }
         }
     }
 
     public ArrayList<Node> getRoot() {
         return this.juuri;
+    }
+
+    @Override
+    public int compareTo(Node uusi) {
+        int paikka = 0;
+        while (true) {
+            if (juuri.get(paikka).getNamechar().compareTo(uusi.getNamechar()) > 0) {
+                break;
+            }
+            paikka++;
+        }
+        return paikka;
     }
 }
