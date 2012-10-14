@@ -1,15 +1,23 @@
 package Trietree;
 
-import java.util.ArrayList;
+import DataStructures.ArrayList;
 
 public class Trietree implements Comparable<Node> {
 
     private ArrayList<Node> juuri;
 
+    /**
+     * Konstruktori, joka alustaa puun juuren.
+     */
     public Trietree() {
         this.juuri = new ArrayList();
     }
 
+    /**
+     * Lisää triepuuhun sanan, joka annetaan parametrinä.
+     *
+     * @param sana sana, joka halutaan lisätä puuhun
+     */
     public void add(String sana) {
 
         Node uusi = getChild(sana.charAt(0));
@@ -23,6 +31,7 @@ public class Trietree implements Comparable<Node> {
                 int paikka = compareTo(uusi);
                 juuri.add(paikka, uusi);
             }
+
             if (loput.length() > 0) {
                 uusi.add(loput);
             }
@@ -30,10 +39,19 @@ public class Trietree implements Comparable<Node> {
             if (loput.length() > 0) {
                 uusi.add(loput);
                 uusi.increaseSize();
+            } // Jos päästiin sanan loppuun, lisätään vain solmun kokoa
+            else {
+                uusi.increaseSize();
             }
         }
     }
 
+    /**
+     * Poistaa puusta sanan, joka annetaan parametrinä.
+     *
+     * @param sana sana, joka halutaan poistaa puusta.
+     * @return palauttaa true, jos poisto tehtiin, muuten false.
+     */
     public boolean remove(String sana) {
         if (etsiSana(sana) == false) {
             return false;
@@ -52,8 +70,12 @@ public class Trietree implements Comparable<Node> {
         return true;
     }
 
+    /**
+     * Etsii puusta parametrinä annetun sanan.
+     */
     public boolean etsiSana(String sana) {
         Node current = null;
+        // Haetaan juuresta sanan alkukirjaimen niminen solmu
         for (int i = 0; i < juuri.size(); i++) {
             if (juuri.get(i).getName() == sana.charAt(0)) {
                 current = juuri.get(i);
@@ -77,34 +99,32 @@ public class Trietree implements Comparable<Node> {
         return true;
     }
 
-    public Node getChild(char c) {
+    private Node getChild(char c) {
         for (int i = 0; i < juuri.size(); i++) {
             if (juuri.get(i).getName() == c) {
                 return juuri.get(i);
             }
         }
         Node tyhja = null;
-        return tyhja; // :D
+        return tyhja;
     }
 
-    public void tulostaSisalto(ArrayList<Node> lista) {
-        if (lista.size() == 0) {
-            System.out.println("");
-        }
-
-
-        for (int i = 0; i < lista.size(); i++) {
-//            for (int j = 0; j < lista.get(i).size(); j++) {
-            System.out.print(lista.get(i).getName());
-            tulostaSisalto(lista.get(i).getRoot());
-//            }
-        }
-    }
-
+    /**
+     * @return Palauttaa puun juurisolmun
+     */
     public ArrayList<Node> getRoot() {
         return this.juuri;
     }
 
+    /**
+     * Metodi kirjainsolmun oikean paikan etsimiseen juuren ArrayListissä.
+     * Vertaa kirjainsolmua muihin juuren solmuihin järjestyksessä, kunnes oikea
+     * paikka löytyy
+     *
+     * @param uusi solmu, jonka paikka halutaan etsiä
+     * @return palauttaa paikan, johon solmu voidaan laittaa, jotta
+     * aakkosjärjestys säilyy
+     */
     @Override
     public int compareTo(Node uusi) {
         int paikka = 0;
@@ -113,6 +133,10 @@ public class Trietree implements Comparable<Node> {
                 break;
             }
             paikka++;
+            // Jos ollaan listan päädyssä, niin paikka on listan lopussa.
+            if (juuri.size() == paikka) {
+                break;
+            }
         }
         return paikka;
     }

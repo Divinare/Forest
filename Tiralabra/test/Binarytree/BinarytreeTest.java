@@ -22,21 +22,16 @@ public class BinarytreeTest extends TestCase {
         binarytree.insert(2);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public void testInsert() {
         // Testataan setUpissa tehdyt insertit
-        assertEquals("juuri ei ollut 7 ", 7, binarytree.getRoot().getKey());
-        assertEquals(5, binarytree.getRoot().getLeft().getKey());
-        assertEquals(8, binarytree.getRoot().getRight().getKey());
-        assertEquals(3, binarytree.getRoot().getLeft().getLeft().getKey());
-        assertEquals(2, binarytree.getRoot().getLeft().getLeft().getLeft().getKey());
-        assertEquals(null, binarytree.getRoot().getRight().getLeft());
-        assertEquals(null, binarytree.getRoot().getLeft().getRight());
-        assertEquals(null, binarytree.getRoot().getLeft().getLeft().getRight());
+        assertEquals("juuri ei ollut 7 ", 7, binarytree.getRoot().key);
+        assertEquals(5, binarytree.getRoot().left.key);
+        assertEquals(8, binarytree.getRoot().right.key);
+        assertEquals(3, binarytree.getRoot().left.left.key);
+        assertEquals(2, binarytree.getRoot().left.left.left.key);
+        assertEquals(null, binarytree.getRoot().right.left);
+        assertEquals(null, binarytree.getRoot().left.right);
+        assertEquals(null, binarytree.getRoot().left.left.right);
     }
 
     public void testDelete() {

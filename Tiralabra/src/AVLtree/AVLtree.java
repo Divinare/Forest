@@ -32,65 +32,78 @@ public class AVLtree implements Cloneable {
      */
     public void AVLinsert(int key) {
         Node uusi = insert(key);
+        if (uusi == null) {
+            return;
+        }
         Node p = uusi.parent;
         // Tarkistetaan menikö puu epätasapainoon, jos meni niin suoritetaan tarvittavat kierrot
         while (p != null) {
             Node alipuu;
+            int lChildHeight = -1, rChildHeight = -1;
+            if (p.left != null) {
+                lChildHeight = p.left.height;
+            }
+            if (p.right != null) {
+                rChildHeight = p.right.height;
+            }
             // Aiheuttaako vanhemman vasen lapsi epätasapainon
-            if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
-                Node parent = p.parent;
-                // onko syy vasemman lapsen vasemmassa vai oikeassa alipuussa?
-                if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
-                    alipuu = rightRotate(p);
-                } else {
-                    alipuu = leftRightRotate(p);
-                }
-                // Asetetaan vanhempi oikein
-                asetaVanhempi(parent, alipuu, p);
+            if (lChildHeight == rChildHeight + 2) {
+                balanceLeftChild(p);
                 return;
             }
             // Aiheuttaako vanhemman oikea lapsi epätasapainon
-            if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
-                Node parent = p.parent;
-                // onko syy vasemman lapsen oikeassa vai vasemmassa alipuussa?
-                if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
-                    alipuu = leftRotate(p);
-                } else {
-                    alipuu = rightLeftRotate(p);
-                }
-                // Asetetaan vanhempi oikein
-                asetaVanhempi(parent, alipuu, p);
+            if (rChildHeight == lChildHeight + 2) {
+                balanceRightChild(p);
                 return;
             }
+            lChildHeight = -1;
+            rChildHeight = -1;
+            if (p.left != null) {
+                lChildHeight = p.left.height;
+            }
+            if (p.right != null) {
+                rChildHeight = p.right.height;
+            }
+            p.height = kumpiKorkeampi(lChildHeight, rChildHeight) + 1;
             p = p.parent; // jatketaan kohti juurta
         }
     }
 
     private Node insert(int key) {
         Node uusi = new Node(key, false);
+        uusi.height = 0;
+        // Jos puussa ei ole mitään, laitetaan uusi solmu juureksi
         if (root == null) {
             root = uusi;
             return uusi;
         }
-        Node x = root;
-        Node p = x;
-        int height = 0;
-        while (x != null) {
-            height++;
-            p = x;
-            if (key < x.key) {
-                x = x.left;
+
+        Node current = root;
+        Node parent = current;
+        while (current != null) {
+            parent = current;
+            if (current.key == key) {
+                return null;
+            }
+            if (key < current.key) {
+                current = current.left;
             } else {
-                x = x.right;
+                current = current.right;
             }
         }
-        uusi.parent = p;
+        uusi.parent = parent;
 
-
-        if (uusi.key < p.key) {
-            p.left = uusi;
+        // Asetetaan vanhemman lapseksi uusi solmu
+        if (uusi.key < parent.key) {
+            parent.left = uusi;
+            if (parent.right == null) {
+                parent.height = 1;
+            }
         } else {
-            p.right = uusi;
+            parent.right = uusi;
+            if (parent.left == null) {
+                parent.height = 1;
+            }
         }
         return uusi;
     }
@@ -102,45 +115,38 @@ public class AVLtree implements Cloneable {
      * @param poistettava
      */
     public void AVLdelete(Node poistettava) {
-        Node poistettu = delete(poistettava);
-        // Jos poistettiin jotain
-        if (poistettu != null) {
-            Node alipuu;
-            Node p = poistettu.parent;
-            while (p != null) {
-                Node parent = p.parent;
-                if (laskeKorkeus(p.left) == laskeKorkeus(p.right) + 2) {
-                    if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
-                        alipuu = rightRotate(p);
-                    } else {
-                        alipuu = leftRightRotate(p);
+        // Varmistetaan, ettei tyhjää koiteta poistaa
+        if (poistettava != null) {
+            Node poistettu = delete(poistettava);
+            // Jos poistettiin jotain
+            if (poistettu != null) {
+                Node alipuu;
+                Node p = poistettu.parent;
+                while (p != null) {
+                    Node parent = p.parent;
+                    int lChildHeight = -1;
+                    int rChildHeight = -1;
+                    if (p.left != null) {
+                        lChildHeight = p.left.height;
                     }
-                    // Asetetaan vanhempi oikein
-                    asetaVanhempi(parent, alipuu, p);
+                    if (p.right != null) {
+                        rChildHeight = p.right.height;
+                    }
+                    if (lChildHeight == rChildHeight + 2) {
+                        balanceLeftChild(p);
+                        return;
 
-                } else if (laskeKorkeus(p.right) == laskeKorkeus(p.left) + 2) {
-                    if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
-                        alipuu = leftRotate(p);
-                    } else {
-                        alipuu = leftRightRotate(p);
                     }
-                    // Asetetaan vanhempi oikein
-                    asetaVanhempi(parent, alipuu, p);
+                    if (rChildHeight == lChildHeight + 2) {
+                        balanceRightChild(p);
+                        return;
+                    }
+                    p.height = kumpiKorkeampi(lChildHeight, rChildHeight + 1);
+                    // Jatketaan kohti juurta
+                    p = parent;
+
                 }
-                // Jatketaan kohti juurta
-                p = parent;
             }
-        }
-    }
-
-    private void asetaVanhempi(Node parent, Node alipuu, Node p) {
-        // p on poistetun vanhempi
-        if (parent == null) {
-            this.root = alipuu;
-        } else if (parent.left == p) {
-            parent.left = alipuu;
-        } else {
-            parent.right = alipuu;
         }
     }
 
@@ -201,6 +207,29 @@ public class AVLtree implements Cloneable {
         return null;
     }
 
+    /**
+     * Asettaa p:n (eli solmun, jonka epätasapaino korjattiin) vanhemman
+     * vasemmaksi tai oikeaksi lapseksi alipuun, joka saatiin kun puussa
+     * suoritettiin kiertoja
+     *
+     * @param parent p:n vanhempi
+     * @param alipuu kierroista saatu alipuu
+     * @param p solmu, jonka epätasapaino korjattiin
+     */
+    private void fixParent(Node parent, Node alipuu, Node p) {
+        // p on poistetun vanhempi
+        if (parent == null) {
+            this.root = alipuu;
+        } else if (parent.left == p) {
+            parent.left = alipuu;
+        } else {
+            parent.right = alipuu;
+        }
+        if (parent != null) {
+            parent.height = kumpiKorkeampi(laskeKorkeus(parent.left), laskeKorkeus(parent.right)) + 1;
+        }
+    }
+
     private Node rightRotate(Node x) {
         Node xLeft = x.left;
         xLeft.parent = x.parent;
@@ -210,6 +239,8 @@ public class AVLtree implements Cloneable {
         if (x.left != null) {
             x.left.parent = x;
         }
+        x.height = kumpiKorkeampi(laskeKorkeus(x.left), laskeKorkeus(x.right)) + 1;
+        xLeft.height = kumpiKorkeampi(laskeKorkeus(xLeft.left), laskeKorkeus(xLeft.right)) + 1;
         return xLeft;
     }
 
@@ -222,6 +253,8 @@ public class AVLtree implements Cloneable {
         if (x.right != null) {
             x.right.parent = x;
         }
+        x.height = kumpiKorkeampi(laskeKorkeus(x.left), laskeKorkeus(x.right)) + 1;
+        xRight.height = kumpiKorkeampi(laskeKorkeus(xRight.left), laskeKorkeus(xRight.right)) + 1;
         return xRight;
     }
 
@@ -235,6 +268,40 @@ public class AVLtree implements Cloneable {
         Node xLeft = x.left;
         x.left = leftRotate(xLeft);
         return rightRotate(x);
+    }
+    /**
+     * Suorittaa tarvittavat kierrot solmun p vasemmalle lapselle, joka
+     * on epätasapainossa ja kutsuu metodia fixParent
+     * @param p solmu, jonka vasen lapsi on epätasapainossa
+     */
+    private void balanceLeftChild(Node p) {
+        Node alipuu;
+        Node parent = p.parent;
+        // onko syy vasemman lapsen vasemmassa vai oikeassa alipuussa?
+        if (laskeKorkeus(p.left.left) > laskeKorkeus(p.left.right)) {
+            alipuu = rightRotate(p);
+        } else {
+            alipuu = leftRightRotate(p);
+        }
+        // Asetetaan p:n vanhemman lapseksi alipuu
+        fixParent(parent, alipuu, p);
+    }
+    /**
+     * Suorittaa tarvittavat kierrot solmun p oikealle lapselle, joka
+     * on epätasapainossa ja kutsuu metodia fixParent
+     * @param p solmu, jonka oikea lapsi on epätasapainossa
+     */
+    private void balanceRightChild(Node p) {
+        Node alipuu;
+        Node parent = p.parent;
+        // onko syy oikean lapsen oikeassa vai vasemmassa alipuussa?
+        if (laskeKorkeus(p.right.right) > laskeKorkeus(p.right.left)) {
+            alipuu = leftRotate(p);
+        } else {
+            alipuu = rightLeftRotate(p);
+        }
+        // Asetetaan p:n vanhemman lapseksi alipuu
+        fixParent(parent, alipuu, p);
     }
 
     /**
@@ -472,6 +539,13 @@ public class AVLtree implements Cloneable {
      */
     public Node getRoot() {
         return root;
+    }
+
+    private int kumpiKorkeampi(int a, int b) {
+        if (a >= b) {
+            return a;
+        }
+        return b;
     }
 
     /**

@@ -4,17 +4,23 @@ public class LinkedList {
 
     private Node head;
     private Node tail;
-    private int length; // emt tarviiks tätä
+    private int length;
 
+    /**
+     * Konstruktori alustaa linkitetyn listan, laittaa headiksi sekä tailiksi
+     * parametrinä annetun solmun ja asettaa pituudeksi yhden.
+     * @param uusi solmu, joka asetetaan listan headiksi ja tailiksi
+     */
     public LinkedList(Node uusi) {
-//        Node uusi = new Node(key, false);
         this.head = uusi;
         this.tail = uusi;
         this.length = 1;
     }
-
+    /**
+     * Lisää listaan tailiksi parametrinä annetun solmun ja kasvattaa listan pituutta.
+     * @param uusi solmu, joka halutaan lisätä listaan
+     */
     public void add(Node uusi) {
-//        Node uusi = new Node(key, false);
         if (getSize() == 1) {
             head.next = tail;
         }

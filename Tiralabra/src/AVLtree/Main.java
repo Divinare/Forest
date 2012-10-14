@@ -1,4 +1,5 @@
 package AVLtree;
+import DataStructures.Node;
 
 public class Main {
 
@@ -8,16 +9,16 @@ public class Main {
         avltree.AVLinsert(8);
         avltree.AVLinsert(7);
         avltree.AVLinsert(10);
-//        System.out.println("tulostetaan puu:");
-//        avltree.printTree();
+        System.out.println("tulostetaan puu:");
+        avltree.printTree();
         avltree.AVLinsert(2);
         avltree.AVLinsert(4);
-//        System.out.println("tulostetaan puu:");
-//        avltree.printTree();
+        System.out.println("tulostetaan puu:");
+        avltree.printTree();
         avltree.AVLinsert(1);
         avltree.AVLinsert(6);
-        avltree.AVLinsert(9);
         avltree.AVLinsert(11);
+        avltree.AVLinsert(9);
         System.out.println("in-order läpikäynti:");
         avltree.printInOrder(avltree.getRoot());
         System.out.println("pre-order läpikäynti:");
@@ -37,15 +38,17 @@ public class Main {
         System.out.println("poistetaan 7:");
         avltree.AVLdelete(avltree.search(avltree.getRoot(), 7));
         avltree.printTree();
-//        System.out.println("poistetaan 5:");
-//        avltree.AVLdelete(avltree.search(avltree.getRoot(), 5));
-//        avltree.printTree();
-//        avltree.AVLdelete(avltree.search(avltree.getRoot(), 8));
-//        avltree.printTree();
-//        avltree.AVLdelete(avltree.search(avltree.getRoot(), 10));
-//        avltree.printTree();
-//        avltree.AVLdelete(avltree.search(avltree.getRoot(), 7));
-//        avltree.printTree();
-
+        System.out.println("poistetaan 5:");
+        avltree.AVLdelete(avltree.search(avltree.getRoot(), 5));
+        avltree.printTree();
+        System.out.println("poistetaan 8");
+        avltree.AVLdelete(avltree.search(avltree.getRoot(), 8));
+        avltree.printTree();
+        System.out.println("poistetaan 10");
+        avltree.AVLdelete(avltree.search(avltree.getRoot(), 10));
+        avltree.printTree();
+        System.out.println("poistetaan 7, jota ei ole puussa");
+        avltree.AVLdelete(avltree.search(avltree.getRoot(), 7));
+        avltree.printTree();     
     }
 }

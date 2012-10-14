@@ -7,44 +7,75 @@ public class Binarytree implements Cloneable {
 
     private Node root;
 
+    /**
+     * Luo binääripuun ja laittaa juureksi parametrinä annetun avaimen.
+     *
+     * @param key numero, joka tulee binääripuun juureksi
+     */
     public Binarytree(int key) {
         this.root = new Node(key, false);
     }
 
+    /**
+     * Luo binääripuun ja laittaa juureksi parametrinä annetun juuren.
+     *
+     * @param root puulle annettava juurisolmu
+     */
     public Binarytree(Node root) {
         this.root = root;
     }
 
+    /**
+     * Lisää binääripuuhun parametrinä annetun avaimen.
+     *
+     * @param key avain, joka halutaan lisätä puuhun
+     */
     public void insert(int key) {
         Node uusi = new Node(key, false);
         if (root == null) {
             root = uusi;
             return;
         }
-        Node x = root;
-        Node p = x;
-        while (x != null) {
-            p = x;
-            if (key < x.key) {
-                x = x.left;
-            } else {
-                x = x.right;
+        Node current = root;
+
+        Node p = current;
+        while (true) {
+            if (key == current.key) {
+                return; // Jos lisättävä on juuri, ei tarvitse lisätä
+            }
+            if (key < current.key) { // Vasemmalle jos lisättävä avain pienempi
+                if (current.left != null) {
+                    current = current.left;
+                } else { // jos tyhjä, asetetaan arvo ja palataan
+                    current.left = uusi;
+                    current.left.parent = current;
+                    return;
+                }
+            } else { // Oikealle jos lisättävä avain suurempi
+                if (current.right != null) {
+                    current = current.right;
+                } else { // jos tyhjä, asetetaan arvo ja palataan
+                    current.right = uusi;
+                    current.right.parent = current;
+                    return;
+                }
             }
         }
-        uusi.parent = p;
-
-
-        if (uusi.key < p.key) {
-            p.left = uusi;
-        } else {
-            p.right = uusi;
-        }
-
     }
 
+    /**
+     * Poistaa binääripuusta parametrinä annetun solmun.
+     *
+     * @param poistettava solmu, joka halutaan poistaa
+     * @return palauttaa solmun, joka poistettiin tai jos solmua ei löytynyt
+     * palautetaan null
+     */
     public Node delete(Node poistettava) {
         // Onko poistettava puussa
-        if (search(this.getRoot(), poistettava.key) != null) {
+        if (poistettava == null) {
+            return null;
+        }
+//        if (search(this.getRoot(), poistettava.key) != null) {
             // Poistettavalla ei ole lapsia:
             if (poistettava.left == null && poistettava.right == null) {
                 Node vanhempi = poistettava.parent;
@@ -94,10 +125,17 @@ public class Binarytree implements Cloneable {
                 lapsi.parent = vanhempi;
             }
             return seuraaja;
-        }
-        return null;
+//        }
+//        return null;
     }
 
+    /**
+     * Etsii annetun solmun binäärihakupuusta annetun avaimen.
+     *
+     * @param x solmu, josta lähdetään avainta etsimään
+     * @param key avain, joka halutaan etsiä
+     * @return Palauttaa etsittävän avaimen
+     */
     public Node search(Node x, int key) {
         if (x == null || x.key == key) {
             return x;
@@ -109,6 +147,12 @@ public class Binarytree implements Cloneable {
         }
     }
 
+    /**
+     * Palauttaa minimin
+     *
+     * @param x Node, josta kohtaa puuta lähdetään minimiä etsimään
+     * @return Node minimi
+     */
     public Node min(Node x) {
         while (x.left != null) {
             x = x.left;
@@ -116,6 +160,12 @@ public class Binarytree implements Cloneable {
         return x;
     }
 
+    /**
+     * Palauttaa maximin
+     *
+     * @param x Node, josta kohtaa puuta lähdetään maximia etsimään
+     * @return Node maximi
+     */
     public Node max(Node x) {
         while (x.right != null) {
             x = x.right;
@@ -123,6 +173,12 @@ public class Binarytree implements Cloneable {
         return x;
     }
 
+    /**
+     * Laskee puun korkeuden
+     *
+     * @param x Node, josta kohtaa puun korkeutta lähdetään laskemaan
+     * @return puun korkeus
+     */
     public int laskeKorkeus(Node x) {
         if (x == null) {
             return -1;
@@ -132,6 +188,11 @@ public class Binarytree implements Cloneable {
         return Math.max(k1, k2) + 1;
     }
 
+    /**
+     * Tulostaa puun sisäjärjestyksessä
+     *
+     * @param x
+     */
     public void printInOrder(Node x) {
         if (x != null) {
             printInOrder(x.left);
@@ -140,6 +201,11 @@ public class Binarytree implements Cloneable {
         }
     }
 
+    /**
+     * Tulostaa puun esijärjestyksessä
+     *
+     * @param x
+     */
     public void printPreOrder(Node x) {
         if (x != null) {
             System.out.println(x.key);
@@ -149,6 +215,11 @@ public class Binarytree implements Cloneable {
         }
     }
 
+    /**
+     * Tulostaa puun tasojärjestyksessä
+     *
+     * @param x
+     */
     public void printLevelOrder(Node x) {
         if (x != null) {
             LinkedList list = new LinkedList(x);
@@ -169,6 +240,11 @@ public class Binarytree implements Cloneable {
         }
     }
 
+    /**
+     * Tulostaa puun graafiseen tyyliin
+     *
+     * @throws CloneNotSupportedException
+     */
     public void printTree() throws CloneNotSupportedException {
         int korkeus = laskeKorkeus(this.getRoot());
         int tamanHetkinenKorkeus = korkeus;

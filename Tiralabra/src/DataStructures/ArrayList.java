@@ -1,6 +1,6 @@
 package DataStructures;
 
-public class ArrayList {
+public class ArrayList<E> {
 
     private int size;
     private Object[] taulu;
@@ -51,7 +51,10 @@ public class ArrayList {
         }
     }
 
-    public void add(Object o, int index) {
+    public void add(int index, Object o) {
+        if (index > size) {
+            return;
+        }
         if (size == 0 && index == 0) {
             taulu = new Object[1];
             taulu[0] = o;
@@ -62,14 +65,23 @@ public class ArrayList {
                 System.arraycopy(taulu, 0, uusiTaulu, 0, taulu.length);
                 taulu = uusiTaulu;
             }
-            Object[] loppuosa = new Object[taulu.length-index];
-            System.arraycopy(loppuosa, index, taulu, 0, taulu.length-index);
+            Object[] loppuosa = new Object[size - index];
+            for (int i = 0; i < loppuosa.length; i++) {
+                loppuosa[i] = taulu[index + i];
+            }
+
             taulu[index] = o;
-            System.arraycopy(taulu, index, loppuosa, 0, loppuosa.length);
+            for (int i = 0; i < loppuosa.length; i++) {
+                taulu[index + i +1] = loppuosa[i];
+            }
             size++;
+        }
     }
-}
-public boolean isEmpty() {
+
+    public boolean isEmpty() {
+        if (size == 0) {
+            return true;
+        }
         for (int i = 0; i < taulu.length; i++) {
             if (taulu[i] != null) {
                 return false;
@@ -77,29 +89,18 @@ public boolean isEmpty() {
         }
         return true;
     }
-    
-    public Object get(int i) {
-        return taulu[i];
+
+    public E get(int i) {
+        rangeCheck(i);
+        return (E)taulu[i];
     }
     
-
-//    public int indexOf(Object o) {
-//        if (o == null) {
-//            for (int i = 0; i < size; i++) {
-//                if (taulu[i] == null) {
-//                    return i;
-//                }
-//            }
-//        } else {
-//            for (int i = 0; i < size; i++) {
-//                if (o.equals(taulu[i])) {
-//                    return i;
-//                }
-//            }
-//        }
-//        return -1;
-//    }
-
+    private void rangeCheck(int i) {
+        if (i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+    
     public int size() {
         return size;
     }
