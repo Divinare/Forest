@@ -1,3 +1,3 @@
-Tiralabran harjoitustyö
+Tietorakenteiden harjoitustyÃ¶
 =========
-aihe: 3 Puuta ja niiden läpikäynti
+3 Puuta ja niiden lÃ¤pikÃ¤ynti
